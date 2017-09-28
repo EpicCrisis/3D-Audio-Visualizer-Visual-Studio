@@ -102,12 +102,14 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Simple camera controller. (KEYBOARD)
-		float camMoveOffsetX = 0.0f, camMoveOffsetZ = 0.0f;
-		if (glfwGetKey(window, 'A')) camMoveOffsetX -= 0.01f;
-		if (glfwGetKey(window, 'D')) camMoveOffsetX += 0.01f;
-		if (glfwGetKey(window, 'W')) camMoveOffsetZ -= 0.01f;
-		if (glfwGetKey(window, 'S')) camMoveOffsetZ += 0.01f;
-		gCamera.translateLocal(camMoveOffsetX, 0.0f, camMoveOffsetZ);
+		float camMoveOffsetX = 0.0f, camMoveOffsetY = 0.0f, camMoveOffsetZ = 0.0f;
+		if (glfwGetKey(window, 'A')) camMoveOffsetX -= 0.1f;
+		if (glfwGetKey(window, 'D')) camMoveOffsetX += 0.1f;
+		if (glfwGetKey(window, 'W')) camMoveOffsetZ -= 0.1f;
+		if (glfwGetKey(window, 'S')) camMoveOffsetZ += 0.1f;
+		if (glfwGetKey(window, 'X')) camMoveOffsetY -= 0.1f;
+		if (glfwGetKey(window, 'Z')) camMoveOffsetY += 0.1f;
+		gCamera.translateLocal(camMoveOffsetX, camMoveOffsetY, camMoveOffsetZ);
 
 		// Check if ESC key was pressed
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE))
