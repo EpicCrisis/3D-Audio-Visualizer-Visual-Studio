@@ -323,6 +323,7 @@ public:
 		drawCube();
 		*/
 
+		
 		// "DNA" Animation
 		float radius = 2.0f;
 		float offsetY = 0.2f;
@@ -345,7 +346,14 @@ public:
 		}
 
 		cubeBaseAngle += 0.05f;
+		
 
+		/*
+		Matrix coneTranslation = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
+		Matrix coneRotation = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 1.0f));
+		Matrix coneMatrix = viewMatrix * coneRotation * coneTranslation;
+		drawCone(1.0f, 0.2f);
+		*/
 
 		/*Example for sequences of tranforms*/
 		/*
