@@ -323,7 +323,7 @@ public:
 		drawCube();
 		*/
 
-		
+		/*
 		// "DNA" Animation
 		float radius = 2.0f;
 		float offsetY = 0.2f;
@@ -346,13 +346,92 @@ public:
 		}
 
 		cubeBaseAngle += 0.05f;
-		
+		*/
 
 		/*
-		Matrix coneTranslation = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
-		Matrix coneRotation = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 1.0f));
-		Matrix coneMatrix = viewMatrix * coneRotation * coneTranslation;
+		Matrix coneTranslation = Matrix::makeTranslationMatrix(Vector(0.0f, 4.0f, 4.0f));
+		Matrix coneRotation = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 1.0f, 1.0f));
+		Matrix coneMatrix = viewMatrix * coneRotation;
+		glLoadMatrixf((GLfloat*)coneMatrix.mVal);
 		drawCone(1.0f, 0.2f);
+		*/
+
+		//drawing both legs
+		for (int j = 0; j < 2; j++)
+		{
+			//3 main toes on left side
+			for (int i = 0; i < 3; i++)
+			{
+				/*
+				Matrix coneTranslation1 = Matrix::makeTranslationMatrix(Vector(i, 0.0f, 0.0f));
+				Matrix coneRotation1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
+				Matrix coneMatrix1 = viewMatrix * coneTranslation1 * coneRotation1;
+				glLoadMatrixf((GLfloat*)coneMatrix1.mVal);
+				drawCone(1.0f, 0.2f);
+				*/
+
+				Matrix feetTranslate1 = Matrix::makeTranslationMatrix(Vector(i * 0.5f + j * 3.0f, 0.0f, 0.0f));
+				Matrix toeTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, 1.5f, 0.0f));
+				Matrix feetRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
+				Matrix feetRotate2 = Matrix::makeRotateMatrix((30.0f * i) - 30.0f, Vector(0.0f, 1.0f, 0.0f));
+
+				Matrix modelMatrix = feetTranslate1 * feetRotate2 * feetRotate1;
+				Matrix feetMatrix1 = viewMatrix * modelMatrix;
+				glLoadMatrixf((GLfloat*)feetMatrix1.mVal);
+				drawCylinder(2.0f, 0.18f);
+
+				modelMatrix = modelMatrix * toeTranslate1;
+				Matrix feetMatrix2 = viewMatrix * modelMatrix;
+				glLoadMatrixf((GLfloat*)feetMatrix2.mVal);
+				drawCone(1.0f, 0.2f);
+
+				/*
+				GLUquadric *quadric;
+
+				quadric = gluNewQuadric();
+
+				gluSphere(quadric, 0.5, 30, 30);
+				*/
+			}
+
+			//left lower leg
+			Matrix leftLowerLegTranslate1 = Matrix::makeTranslationMatrix(Vector(0.5f + j * 3.0f, 1.5f, 1.35f));
+			Matrix leftLowerLegRotate1 = Matrix::makeRotateMatrix(-15.0f, Vector(1.0f, 0.0f, 0.0f));
+
+			Matrix modelMatrixLeftLeg1 = leftLowerLegTranslate1 * leftLowerLegRotate1;
+			Matrix leftLowerLegMatrix1 = viewMatrix * modelMatrixLeftLeg1;
+			glLoadMatrixf((GLfloat*)leftLowerLegMatrix1.mVal);
+			drawCylinder(3.0f, 0.2f);
+
+			//left upper leg
+			Matrix leftUpperLegTranslate1 = Matrix::makeTranslationMatrix(Vector(0.5f + j * 3.0f, 4.25f, 1.35f));
+			Matrix leftUpperLegRotate1 = Matrix::makeRotateMatrix(15.0f, Vector(1.0f, 0.0f, 0.0f));
+
+			Matrix modelMatrixLeftLeg2 = leftUpperLegTranslate1 * leftUpperLegRotate1;
+			Matrix leftUpperLegMatrix1 = viewMatrix * modelMatrixLeftLeg2;
+			glLoadMatrixf((GLfloat*)leftUpperLegMatrix1.mVal);
+			drawCylinder(3.0f, 0.2f);
+		}
+
+		/*
+		//3 main toes on right side
+		for (int i = 0; i < 3; i++)
+		{
+			Matrix feetTranslate1 = Matrix::makeTranslationMatrix(Vector(i * 0.5f + 5.0f, 0.0f, 0.0f));
+			Matrix toeTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, 1.5f, 0.0f));
+			Matrix feetRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
+			Matrix feetRotate2 = Matrix::makeRotateMatrix((30.0f * i) - 30.0f, Vector(0.0f, 1.0f, 0.0f));
+
+			Matrix modelMatrix = feetTranslate1 * feetRotate2 * feetRotate1;
+			Matrix feetMatrix1 = viewMatrix * modelMatrix;
+			glLoadMatrixf((GLfloat*)feetMatrix1.mVal);
+			drawCylinder(2.0f, 0.18f);
+
+			modelMatrix = modelMatrix * toeTranslate1;
+			Matrix feetMatrix2 = viewMatrix * modelMatrix;
+			glLoadMatrixf((GLfloat*)feetMatrix2.mVal);
+			drawCone(1.0f, 0.2f);
+		}
 		*/
 
 		/*Example for sequences of tranforms*/
