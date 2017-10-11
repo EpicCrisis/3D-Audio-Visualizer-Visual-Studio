@@ -33,7 +33,7 @@ private:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //Apply texture wrapping along horizontal part
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); //Apply texture wrapping along vertical part
 
-																	  //Bilinear filtering
+		//Bilinear filtering
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //Near filtering for texture scaling
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //Far filtering for texture scaling
 
@@ -170,6 +170,8 @@ public:
 		glBindTexture(GL_TEXTURE_2D, mTextureID[0]);
 
 		glBegin(GL_TRIANGLES);
+
+	
 
 		// Negative Square (back)
 		glTexCoord2f(1.0f, 0.0f), glVertex3f(-size, size, -size);
