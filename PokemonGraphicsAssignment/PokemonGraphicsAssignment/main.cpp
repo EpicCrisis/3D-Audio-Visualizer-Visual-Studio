@@ -103,12 +103,12 @@ int main()
 
 		// Simple camera controller. (KEYBOARD)
 		float camMoveOffsetX = 0.0f, camMoveOffsetY = 0.0f, camMoveOffsetZ = 0.0f;
-		if (glfwGetKey(window, 'A')) camMoveOffsetX -= 0.002f;
-		if (glfwGetKey(window, 'D')) camMoveOffsetX += 0.002f;
-		if (glfwGetKey(window, 'W')) camMoveOffsetZ -= 0.002f;
-		if (glfwGetKey(window, 'S')) camMoveOffsetZ += 0.002f;
-		if (glfwGetKey(window, 'X')) camMoveOffsetY -= 0.002f;
-		if (glfwGetKey(window, 'Z')) camMoveOffsetY += 0.002f;
+		if (glfwGetKey(window, 'A')) camMoveOffsetX -= 0.005f;
+		if (glfwGetKey(window, 'D')) camMoveOffsetX += 0.005f;
+		if (glfwGetKey(window, 'W')) camMoveOffsetZ -= 0.005f;
+		if (glfwGetKey(window, 'S')) camMoveOffsetZ += 0.005f;
+		if (glfwGetKey(window, 'X')) camMoveOffsetY -= 0.005f;
+		if (glfwGetKey(window, 'Z')) camMoveOffsetY += 0.005f;
 		gCamera.translateLocal(camMoveOffsetX, camMoveOffsetY, camMoveOffsetZ);
 
 		// Check if ESC key was pressed
