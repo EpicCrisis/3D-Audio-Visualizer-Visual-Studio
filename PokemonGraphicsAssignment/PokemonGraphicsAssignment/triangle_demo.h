@@ -91,15 +91,15 @@ public:
 		glEnd();										// Finished Drawing The Triangles
 	}
 
-	void drawCube(float sizeX = 1.0f, float sizeY = 1.0f, float sizeZ = 1.0f)
+	void drawCube(float sizeX = 1.0f, float sizeY = 1.0f, float sizeZ = 1.0f, float red = 1.0f, float green = 1.0f, float blue = 1.0f)
 	{
 		sizeX /= 2.0f;
 		sizeY /= 2.0f;
 		sizeZ /= 2.0f;
 		glBegin(GL_TRIANGLES);
 
-		// Blue
-		glColor3f(0.25f, 0.25f, 1.0f);
+		// Custom colour
+		glColor3f(red, green, blue);
 
 		// Negative Square
 		glVertex3f(-sizeX, sizeY, -sizeZ);
@@ -120,7 +120,7 @@ public:
 		glVertex3f(sizeX, -sizeY, sizeZ);
 
 		// Green
-		glColor3f(0.25f, 1.0f, 0.25f);
+		//glColor3f(0.25f, 1.0f, 0.25f);
 
 		// Negative Square
 		glVertex3f(sizeX, -sizeY, -sizeZ);
@@ -141,7 +141,7 @@ public:
 		glVertex3f(-sizeX, sizeY, sizeZ);
 
 		// Red
-		glColor3f(1.0f, 0.25f, 0.25f);
+		//glColor3f(1.0f, 0.25f, 0.25f);
 
 		// Negative Square
 		glVertex3f(-sizeX, -sizeY, sizeZ);
@@ -300,7 +300,7 @@ public:
 		glEnd();										// Finished Drawing The Triangles
 	}
 
-	void drawCylinder(float height, float radius, int iteration = 100) //Change iteration to steps
+	void drawCylinder(float height, float radius, int iteration = 100, float red = 1.0f, float green = 1.0f, float blue = 1.0f) //Change iteration to steps
 	{
 		//Offset
 		float offsetX = 0.0f;
@@ -308,7 +308,7 @@ public:
 		float offsetZ = 0.0f;
 		float halfHeight = height / 2.0f;
 
-		glColor3f(1.0f, 1.0f, 1.0f);
+		glColor3f(red, green, blue);
 		glBegin(GL_TRIANGLES);							// Drawing Using Triangles
 
 		float t = 360.0f / iteration;
@@ -322,7 +322,7 @@ public:
 			float z2 = radius * sin(((i + 1) * t) * PI / 180.0);
 
 			// ---- Upper Circle ----
-			glColor3f(1.0f, (i % 2 == 0 ? 0.5f : 1.0f), 0.5f);
+			//glColor3f(1.0f, (i % 2 == 0 ? 0.5f : 1.0f), 0.5f);
 			//Center of the circle
 			glVertex3f(offsetX, offsetY + halfHeight, offsetZ);
 
@@ -333,7 +333,7 @@ public:
 			glVertex3f(x2, offsetY + halfHeight, z2);
 
 			// ---- Lower Circle ----
-			glColor3f(1.0f, (i % 2 == 0 ? 0.5f : 1.0f), 0.5f);
+			//glColor3f(1.0f, (i % 2 == 0 ? 0.5f : 1.0f), 0.5f);
 			//Center of the circle
 			glVertex3f(offsetX, offsetY - halfHeight, offsetZ);
 
@@ -344,7 +344,7 @@ public:
 			glVertex3f(x2, offsetY - halfHeight, z2);
 
 			// ---- Upper Triangle ----
-			glColor3f(0.5f, 1.0f, 0.5f);
+			//glColor3f(0.5f, 1.0f, 0.5f);
 			//First point
 			glVertex3f(x1, offsetY + halfHeight, z1);
 
@@ -355,7 +355,7 @@ public:
 			glVertex3f(x1, offsetY - halfHeight, z1);
 
 			// ---- Lower Triangle ----
-			glColor3f(0.5f, 0.5f, 1.0f);
+			//glColor3f(0.5f, 0.5f, 1.0f);
 			//First point
 			glVertex3f(x1, offsetY - halfHeight, z1);
 
@@ -369,7 +369,7 @@ public:
 		glEnd();										// Finished Drawing The Triangles
 	}
 
-	void drawCone(float height, float radius, int iteration = 100)
+	void drawCone(float height, float radius, int iteration = 100, float red = 1.0f, float green = 1.0f, float blue = 1.0f)
 	{
 		//Offset
 		float offsetX = 0.0f;
@@ -377,7 +377,7 @@ public:
 		float offsetZ = 0.0f;
 		float halfHeight = height / 2.0f;
 
-		glColor3f(1.0f, 1.0f, 1.0f);
+		glColor3f(red, green, blue);
 		glBegin(GL_TRIANGLES);							// Drawing Using Triangles
 
 		float t = 360.0f / iteration;
@@ -391,7 +391,7 @@ public:
 			float z2 = radius * sin(((i + 1) * t) * PI / 180.0);
 
 			// ---- Circle ----
-			glColor3f(1.0f, (i % 2 == 0 ? 0.5f : 1.0f), 0.5f);
+			//glColor3f(1.0f, (i % 2 == 0 ? 0.5f : 1.0f), 0.5f);
 			//Center of the circle
 			glVertex3f(offsetX, offsetY - halfHeight, offsetZ);
 
@@ -402,7 +402,7 @@ public:
 			glVertex3f(x2, offsetY - halfHeight, z2);
 
 			// ---- Triangle ----
-			glColor3f(0.5f, (i % 2 == 0 ? 0.5f : 1.0f), (i % 2 == 0 ? 1.0f : 0.5f));
+			//glColor3f(0.5f, (i % 2 == 0 ? 0.5f : 1.0f), (i % 2 == 0 ? 1.0f : 0.5f));
 			//Upper vertex
 			glVertex3f(offsetX, offsetY + halfHeight, offsetZ);
 
@@ -416,30 +416,30 @@ public:
 		glEnd();										// Finished Drawing The Triangles
 	}
 
-	void drawTrianglePyramid(float height, float width, float breadth)
+	void drawTrianglePyramid(float height, float width, float breadth, float red = 1.0f, float green = 1.0f, float blue = 1.0f)
 	{
 		glBegin(GL_TRIANGLES);
 
-		glColor3f(1.0f, 0.0f, 1.0f);
-
+		// Bottom of the triangle pyramid. ---//
+		glColor3f(red, green, blue);
 		glVertex3f(-width, 0.0f, 0.0f);
 		glVertex3f(width, 0.0f, 0.0f);
 		glVertex3f(0.0f, 0.0f, breadth);
 
-		glColor3f(0.0f, 0.0f, 1.0f);
-
+		// Left side. ---//
+		//glColor3f(0.0f, 0.0f, 1.0f);
 		glVertex3f(-width, 0.0f, 0.0f);
 		glVertex3f(0.0f, 0.0f, breadth);
 		glVertex3f(0.0f, height, 0.0f);
 
-		glColor3f(1.0f, 0.0f, 0.0f);
-
+		// Right side. ---//
+		//glColor3f(1.0f, 0.0f, 0.0f);
 		glVertex3f(width, 0.0f, 0.0f);
 		glVertex3f(0.0f, 0.0f, breadth);
 		glVertex3f(0.0f, height, 0.0f);
 
-		glColor3f(0.0f, 1.0f, 0.0f);
-
+		// Back side. ---//
+		//glColor3f(0.0f, 1.0f, 0.0f);
 		glVertex3f(width, 0.0f, 0.0f);
 		glVertex3f(-width, 0.0f, 0.0f);
 		glVertex3f(0.0f, height, 0.0f);
@@ -568,7 +568,7 @@ public:
 
 		Matrix bodyMatrix1 = viewMatrix * theBodyModelMatrix;
 		glLoadMatrixf((GLfloat*)bodyMatrix1.mVal);
-		drawCube(3.25f, 3.5f, 3.25f);
+		drawCube(3.25f, 3.5f, 3.25f, 0.804f, 0.522f, 0.247f);
 
 		// Drawing 2 necks. ---//
 
@@ -595,16 +595,16 @@ public:
 
 			Matrix neckPivotMatrix1 = viewMatrix * theNeckPivotModelMatrix1;
 			glLoadMatrixf((GLfloat*)neckPivotMatrix1.mVal);
-			drawCube(0.5f, 0.5f, 0.5f);
+			drawCube(0.5f, 0.5f, 0.5f, 0.804f, 0.522f, 0.247f);
 
 			// First neck. ---//
-			Matrix neckTranslation1 = Matrix::makeTranslationMatrix(Vector(0.0f, 2.65f, 0.0f));
+			Matrix neckTranslation1 = Matrix::makeTranslationMatrix(Vector(0.0f, 2.15f, 0.0f));
 
 			Matrix theNeckModelMatrix1 = theNeckPivotModelMatrix1 * neckTranslation1;
 
 			Matrix neckMatrix1 = viewMatrix * theNeckModelMatrix1;
 			glLoadMatrixf((GLfloat*)neckMatrix1.mVal);
-			drawCylinder(5.0f, 0.2f);
+			drawCylinder(4.5f, 0.2f, 100, 0.212f, 0.212f, 0.212f);
 
 			// First head. ---//
 			Matrix headTranslation1;
@@ -613,13 +613,13 @@ public:
 
 			if (x == 0)
 			{
-				headTranslation1 = Matrix::makeTranslationMatrix(Vector(-0.25f, 3.15f, 0.0f));
+				headTranslation1 = Matrix::makeTranslationMatrix(Vector(-0.25f, 3.0f, 0.0f));
 				headRotation1 = Matrix::makeRotateMatrix(-30.0f, Vector(1.0f, 0.0f, 1.0f));
 				headMove1 = Matrix::makeRotateMatrix(2.0f * cos(rot1), Vector(0.0f, 0.0f, 1.0f));
 			}
 			else if (x == 1)
 			{
-				headTranslation1 = Matrix::makeTranslationMatrix(Vector(0.25f, 3.15f, 0.0f));
+				headTranslation1 = Matrix::makeTranslationMatrix(Vector(0.25f, 3.0f, 0.0f));
 				headRotation1 = Matrix::makeRotateMatrix(-30.0f, Vector(1.0f, 0.0f, -1.0f));
 				headMove1 = Matrix::makeRotateMatrix(-(2.0f * cos(rot1)), Vector(0.0f, 0.0f, 1.0f));
 			}
@@ -628,7 +628,7 @@ public:
 
 			Matrix headMatrix1 = viewMatrix * theHeadModelMatrix1;
 			glLoadMatrixf((GLfloat*)headMatrix1.mVal);
-			drawCube(1.85f, 1.85f, 1.85f);
+			drawCube(1.85f, 1.85f, 1.85f, 0.804f, 0.522f, 0.247f);
 
 			// First top beak of the pokemon Doduo. ---//
 			Matrix beakTranslation1;
@@ -644,7 +644,7 @@ public:
 
 			Matrix beakMatrix1 = viewMatrix * theBeakModelMatrix1;
 			glLoadMatrixf((GLfloat*)beakMatrix1.mVal);
-			drawTrianglePyramid(3.0f, 0.45f, 0.35f);
+			drawTrianglePyramid(3.0f, 0.45f, 0.35f, 1.000f, 0.871f, 0.678f);
 
 			// First bottom beak. ---//
 			beakTranslation1 = Matrix::makeTranslationMatrix(Vector(0.0f, -0.5f, -0.85f));
@@ -655,7 +655,7 @@ public:
 
 			Matrix beakMatrix2 = viewMatrix * theBeakModelMatrix2;
 			glLoadMatrixf((GLfloat*)beakMatrix2.mVal);
-			drawTrianglePyramid(2.5f, 0.35f, 0.25f);
+			drawTrianglePyramid(2.5f, 0.35f, 0.25f, 1.000f, 0.871f, 0.678f);
 
 			// Drawing the eyes of the pokemon Doduo. ---//
 			for (int e = 0; e < 2; e++)
@@ -678,7 +678,7 @@ public:
 
 				Matrix eyeMatrix1 = viewMatrix * theEyeModelMatrix1;
 				glLoadMatrixf((GLfloat*)eyeMatrix1.mVal);
-				drawCylinder(0.05f, 0.35f);
+				drawCylinder(0.05f, 0.35f, 100, 0.1f, 0.1f, 0.1f);
 
 				// Drawing the shiny effect. ---//
 				Matrix shinyEyeTranslate1 = Matrix::makeTranslationMatrix(Vector(0.15f, 0.0225f, 0.1f));
@@ -687,7 +687,7 @@ public:
 
 				Matrix shinyEyeMatrix1 = viewMatrix * theShinyModelMatrix1;
 				glLoadMatrixf((GLfloat*)shinyEyeMatrix1.mVal);
-				drawCylinder(0.05f, 0.15f);
+				drawCylinder(0.05f, 0.15f, 100, 0.9f, 0.9f, 0.9f);
 			}
 		}
 
@@ -740,7 +740,7 @@ public:
 
 			Matrix pivotLegMatrix1 = viewMatrix * theLegModelMatrix;
 			glLoadMatrixf((GLfloat*)pivotLegMatrix1.mVal);
-			drawCube(0.5f, 0.5f, 0.5f);
+			drawCube(0.5f, 0.5f, 0.5f, 0.804f, 0.522f, 0.247f);
 
 			// Upper leg. ---//
 			Matrix leftUpperLegTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -1.5f, 0.75f));
@@ -750,7 +750,7 @@ public:
 
 			Matrix leftUpperLegMatrix1 = viewMatrix * theLegModelMatrix;
 			glLoadMatrixf((GLfloat*)leftUpperLegMatrix1.mVal);
-			drawCylinder(3.0f, 0.2f);
+			drawCylinder(3.0f, 0.2f, 100, 1.000f, 0.871f, 0.678f);
 
 			// Lower leg. ---//
 			Matrix leftLowerLegTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -3.65f, -1.0f));
@@ -760,7 +760,7 @@ public:
 
 			Matrix leftLowerLegMatrix1 = viewMatrix * theLegModelMatrix;
 			glLoadMatrixf((GLfloat*)leftLowerLegMatrix1.mVal);
-			drawCylinder(5.0f, 0.225f);
+			drawCylinder(5.0f, 0.225f, 100, 1.000f, 0.871f, 0.678f);
 
 			// Ball of foot. ---//
 			Matrix leftBallTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -2.5f, 0.0f));
@@ -769,7 +769,7 @@ public:
 
 			Matrix leftBallLegMatrix1 = viewMatrix * theLegModelMatrix;
 			glLoadMatrixf((GLfloat*)leftBallLegMatrix1.mVal);
-			drawCube(0.5f, 0.5f, 0.5f);
+			drawCube(0.5f, 0.5f, 0.5f, 1.000f, 0.871f, 0.678f);
 
 			// 3 main toes for the Duduo pokemon. //
 			for (int f = 0; f < 3; f++)
@@ -802,7 +802,7 @@ public:
 
 				Matrix feetMatrix1 = viewMatrix * theToeModelMatrix1;
 				glLoadMatrixf((GLfloat*)feetMatrix1.mVal);
-				drawCylinder(2.0f, 0.185f);
+				drawCylinder(2.0f, 0.185f, 100, 1.000f, 0.871f, 0.678f);
 
 				// First toe position. ---//
 				Matrix toeTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, 1.5f, 0.0f));
@@ -811,7 +811,7 @@ public:
 
 				Matrix feetMatrix2 = viewMatrix * theToeModelMatrix1;
 				glLoadMatrixf((GLfloat*)feetMatrix2.mVal);
-				drawCone(1.0f, 0.2f);
+				drawCone(1.0f, 0.2f, 100, 0.863f, 0.863f, 0.863f);
 			}
 
 			/*
