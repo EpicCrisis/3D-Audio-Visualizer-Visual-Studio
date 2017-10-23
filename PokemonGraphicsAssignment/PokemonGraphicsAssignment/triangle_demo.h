@@ -688,6 +688,15 @@ public:
 				Matrix shinyEyeMatrix1 = viewMatrix * theShinyModelMatrix1;
 				glLoadMatrixf((GLfloat*)shinyEyeMatrix1.mVal);
 				drawCylinder(0.05f, 0.15f, 100, 0.9f, 0.9f, 0.9f);
+
+				// Second shiny effect. ---//
+				Matrix shinyEyeTranslate2 = Matrix::makeTranslationMatrix(Vector(-0.15f, 0.0225f, -0.1f));
+
+				theShinyModelMatrix1 = theEyeModelMatrix1 * shinyEyeTranslate2;
+
+				Matrix shinyEyeMatrix2 = viewMatrix * theShinyModelMatrix1;
+				glLoadMatrixf((GLfloat*)shinyEyeMatrix2.mVal);
+				drawCylinder(0.05f, 0.10f, 100, 0.9f, 0.9f, 0.9f);
 			}
 		}
 
@@ -721,22 +730,22 @@ public:
 		for (int j = 0; j < 2; j++)
 		{
 			// Leg pivot for rotation. ---//
-			Matrix feetMove1;
+			Matrix legMove1;
 
 			if (j == 0)
 			{
-				feetMove1 = Matrix::makeRotateMatrix((30.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
+				legMove1 = Matrix::makeRotateMatrix(-(30.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
 			}
 			else if (j == 1)
 			{
-				feetMove1 = Matrix::makeRotateMatrix(-(30.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
+				legMove1 = Matrix::makeRotateMatrix((30.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
 			}
 
-			Matrix feetMove2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.25 * sin(rot1 * 2), 0.0f));
+			Matrix legMove2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.25 * sin(rot1 * 2), 0.0f));
 			Matrix legTranslateAmount1 = Matrix::makeTranslationMatrix(Vector(0.0f + j * 3.0f, 0.0f, 0.0f));
 			Matrix legRotateAmount1 = Matrix::makeRotateMatrix(15.0f, Vector(1.0f, 0.0f, 0.0f));
 
-			theLegModelMatrix = feetMove2 * feetMove1 * legRotateAmount1 * legTranslateAmount1;
+			theLegModelMatrix = legMove2 * legMove1 * legRotateAmount1 * legTranslateAmount1;
 
 			Matrix pivotLegMatrix1 = viewMatrix * theLegModelMatrix;
 			glLoadMatrixf((GLfloat*)pivotLegMatrix1.mVal);
@@ -762,13 +771,26 @@ public:
 			glLoadMatrixf((GLfloat*)leftLowerLegMatrix1.mVal);
 			drawCylinder(5.0f, 0.225f, 100, 1.000f, 0.871f, 0.678f);
 
-			// Ball of foot. ---//
-			Matrix leftBallTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -2.5f, 0.0f));
+			// Ball of foot or ankle. ---//
+			Matrix ankleModelMatrix1;
+			Matrix moveFeet1;
 
-			theLegModelMatrix = theLegModelMatrix * leftBallTranslate1;
+			if (j == 0)
+			{
+				moveFeet1 = Matrix::makeRotateMatrix((-25.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
+			}
+			else if (j == 1)
+			{
+				moveFeet1 = Matrix::makeRotateMatrix(-(-25.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
+			}
 
-			Matrix leftBallLegMatrix1 = viewMatrix * theLegModelMatrix;
-			glLoadMatrixf((GLfloat*)leftBallLegMatrix1.mVal);
+			Matrix ankleTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -2.5f, 0.0f));
+			Matrix ankleRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
+
+			ankleModelMatrix1 = theLegModelMatrix * ankleTranslate1 * ankleRotate1 * moveFeet1;
+
+			Matrix ankleLegMatrix1 = viewMatrix * ankleModelMatrix1;
+			glLoadMatrixf((GLfloat*)ankleLegMatrix1.mVal);
 			drawCube(0.5f, 0.5f, 0.5f, 1.000f, 0.871f, 0.678f);
 
 			// 3 main toes for the Duduo pokemon. //
@@ -776,29 +798,25 @@ public:
 			{
 				Matrix feetTranslate1;
 				Matrix feetRotate1;
-				Matrix feetRotate2;
 
 				// First feet position. ---//
 				if (f == 0)
 				{
-					feetTranslate1 = Matrix::makeTranslationMatrix(Vector(-0.5f, 0.0f, -1.0f));
-					feetRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
-					feetRotate2 = Matrix::makeRotateMatrix(-30.0f, Vector(0.0f, 1.0f, 0.0f));
+					feetTranslate1 = Matrix::makeTranslationMatrix(Vector(-0.5f, 1.0f, 0.0f));
+					feetRotate1 = Matrix::makeRotateMatrix(-30.0f, Vector(0.0f, 0.0f, 1.0f));
 				}
 				else if (f == 1)
 				{
-					feetTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, -1.0f));
-					feetRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
-					feetRotate2 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 1.0f, 0.0f));
+					feetTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, 1.0f, 0.0f));
+					feetRotate1 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 0.0f, 1.0f));
 				}
 				else if (f == 2)
 				{
-					feetTranslate1 = Matrix::makeTranslationMatrix(Vector(0.5f, 0.0f, -1.0f));
-					feetRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
-					feetRotate2 = Matrix::makeRotateMatrix(30.0f, Vector(0.0f, 1.0f, 0.0f));
+					feetTranslate1 = Matrix::makeTranslationMatrix(Vector(0.5f, 1.0f, 0.0f));
+					feetRotate1 = Matrix::makeRotateMatrix(30.0f, Vector(0.0f, 0.0f, 1.0f));
 				}
 
-				Matrix theToeModelMatrix1 = theLegModelMatrix * feetTranslate1 * feetRotate2 * feetRotate1;
+				Matrix theToeModelMatrix1 = ankleModelMatrix1 * feetTranslate1 * feetRotate1;
 
 				Matrix feetMatrix1 = viewMatrix * theToeModelMatrix1;
 				glLoadMatrixf((GLfloat*)feetMatrix1.mVal);
