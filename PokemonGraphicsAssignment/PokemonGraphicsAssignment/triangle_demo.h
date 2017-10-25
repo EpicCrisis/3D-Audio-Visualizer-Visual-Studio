@@ -9,6 +9,72 @@
 
 #define TEXTURE_COUNT 3
 
+class Vertex
+{
+public:
+	float x;
+	float y;
+	float z;
+
+	Vertex()
+	{
+		x = 0;
+		y = 0;
+		z = 0;
+	}
+
+	Vertex(float a, float b, float c)
+	{
+		x = a;
+		y = b;
+		z = c;
+	}
+};
+
+
+Vertex SphereFunction(float u, float v, float radius)
+{
+	u = u * 3.142f / 180.0f;
+	v = v * 3.142f / 180.0f;
+	Vertex answer;
+	answer.x = cos(u) * sin(v) * radius;
+	answer.y = cos(v) * radius;
+	answer.z = sin(u) * sin(v) * radius;
+	return answer;
+}
+
+void drawSphere(float startU, float startV, float endU, float endV, float radius, float UResolution, float VResolution, float xFactor, float yFactor, float red = 1.0f, float green = 1.0f, float blue = 1.0f)
+{
+	float stepU = (endU - startU) / UResolution;
+	float stepV = (endV - startV) / VResolution;
+
+	glBegin(GL_TRIANGLES);
+	glColor3f(red, green, blue);
+	for (int i = 0; i < UResolution; i++)
+	{
+		for (int j = 0; j < VResolution; j++)
+		{
+			float u = i*stepU + startU;
+			float v = j*stepV + startV;
+			float un = (i + 1 == UResolution) ? endU : (i + 1)*stepU + startU;
+			float vn = (j + 1 == VResolution) ? endV : (j + 1)*stepV + startV;
+
+			Vertex p0 = SphereFunction(u, v, radius);
+			Vertex p1 = SphereFunction(u, vn, radius);
+			Vertex p2 = SphereFunction(un, v, radius);
+			Vertex p3 = SphereFunction(un, vn, radius);
+
+			glVertex3f(p0.x*xFactor, p0.y*yFactor, p0.z);
+			glVertex3f(p2.x*xFactor, p2.y*yFactor, p2.z);
+			glVertex3f(p1.x*xFactor, p1.y*yFactor, p1.z);
+			glVertex3f(p3.x*xFactor, p3.y*yFactor, p3.z);
+			glVertex3f(p1.x*xFactor, p1.y*yFactor, p1.z);
+			glVertex3f(p2.x*xFactor, p2.y*yFactor, p2.z);
+		}
+	}
+	glEnd();
+}
+
 class TriangleDemo : public DemoBase
 {
 private:
@@ -258,6 +324,27 @@ public:
 		//glTexCoord2f(1.0f, 1.0f), glVertex3f(3.0f, 3.0f, 0.0f);
 		//glTexCoord2f(0.0f, 1.0f), glVertex3f(-3.0f, 3.0f, 0.0f);
 		//glTexCoord2f(0.0f, 0.0f), glVertex3f(-3.0f, -3.0f, 0.0f);
+
+		glEnd();
+	}
+
+	void DrawWall(float size = 1.0f)
+	{
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, mTextureID[0]);
+
+		glBegin(GL_TRIANGLES);
+
+		// Negative Square (back)
+		glTexCoord2f(1.0f, 0.0f), glVertex3f(-size, size, -size);
+		glTexCoord2f(1.0f, 1.0f), glVertex3f(-size, -size, -size);
+		glTexCoord2f(0.0f, 1.0f), glVertex3f(size, -size, -size);
+
+		glTexCoord2f(1.0f, 0.0f), glVertex3f(-size, size, -size);
+		glTexCoord2f(0.0f, 0.0f), glVertex3f(size, size, -size);
+		glTexCoord2f(0.0f, 1.0f), glVertex3f(size, -size, -size);
 
 		glEnd();
 	}
@@ -557,280 +644,289 @@ public:
 		drawCone(1.0f, 0.2f);
 		*/
 
-		// Drawing the body. ---//
-
-		Matrix theBodyModelMatrix;
-
-		Matrix bodyTranslation1 = Matrix::makeTranslationMatrix(Vector(1.5f, 1.85f, 0.5f));
-		Matrix bodyMove1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.15 * sin(rot1 * 2), 0.0f));
-
-		theBodyModelMatrix = bodyMove1 * bodyTranslation1;
-
-		Matrix bodyMatrix1 = viewMatrix * theBodyModelMatrix;
-		glLoadMatrixf((GLfloat*)bodyMatrix1.mVal);
-		drawCube(3.25f, 3.5f, 3.25f, 0.804f, 0.522f, 0.247f);
-
-		// Drawing 2 necks. ---//
-
-		for (int x = 0; x < 2; x++)
-		{
-			Matrix neckPivotTranslation1;
-			Matrix neckPivotRotation1;
-
-			// Drawing pivot for first neck. ---//
-			if (x == 0)
-			{
-				neckPivotTranslation1 = Matrix::makeTranslationMatrix(Vector(1.0f, 1.75f, -1.0f));
-				neckPivotRotation1 = Matrix::makeRotateMatrix(30.0f, Vector(1.0f, 0.0f, 1.0f));
-			}
-			else if (x == 1)
-			{
-				neckPivotTranslation1 = Matrix::makeTranslationMatrix(Vector(-1.0f, 1.75f, -1.0f));
-				neckPivotRotation1 = Matrix::makeRotateMatrix(30.0f, Vector(1.0f, 0.0f, -1.0f));
-			}
-
-			Matrix neckMove1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.1 * sin(rot1 * 2), 0.0f));
-
-			Matrix theNeckPivotModelMatrix1 = theBodyModelMatrix * neckMove1 * neckPivotTranslation1 * neckPivotRotation1;
-
-			Matrix neckPivotMatrix1 = viewMatrix * theNeckPivotModelMatrix1;
-			glLoadMatrixf((GLfloat*)neckPivotMatrix1.mVal);
-			drawCube(0.5f, 0.5f, 0.5f, 0.804f, 0.522f, 0.247f);
-
-			// First neck. ---//
-			Matrix neckTranslation1 = Matrix::makeTranslationMatrix(Vector(0.0f, 2.15f, 0.0f));
-
-			Matrix theNeckModelMatrix1 = theNeckPivotModelMatrix1 * neckTranslation1;
-
-			Matrix neckMatrix1 = viewMatrix * theNeckModelMatrix1;
-			glLoadMatrixf((GLfloat*)neckMatrix1.mVal);
-			drawCylinder(4.5f, 0.2f, 100, 0.212f, 0.212f, 0.212f);
-
-			// First head. ---//
-			Matrix headTranslation1;
-			Matrix headRotation1;
-			Matrix headMove1;
-
-			if (x == 0)
-			{
-				headTranslation1 = Matrix::makeTranslationMatrix(Vector(-0.25f, 3.0f, 0.0f));
-				headRotation1 = Matrix::makeRotateMatrix(-30.0f, Vector(1.0f, 0.0f, 1.0f));
-				headMove1 = Matrix::makeRotateMatrix(2.0f * cos(rot1), Vector(0.0f, 0.0f, 1.0f));
-			}
-			else if (x == 1)
-			{
-				headTranslation1 = Matrix::makeTranslationMatrix(Vector(0.25f, 3.0f, 0.0f));
-				headRotation1 = Matrix::makeRotateMatrix(-30.0f, Vector(1.0f, 0.0f, -1.0f));
-				headMove1 = Matrix::makeRotateMatrix(-(2.0f * cos(rot1)), Vector(0.0f, 0.0f, 1.0f));
-			}
-
-			Matrix theHeadModelMatrix1 = theNeckModelMatrix1 * headMove1 * headTranslation1 * headRotation1;
-
-			Matrix headMatrix1 = viewMatrix * theHeadModelMatrix1;
-			glLoadMatrixf((GLfloat*)headMatrix1.mVal);
-			drawCube(1.85f, 1.85f, 1.85f, 0.804f, 0.522f, 0.247f);
-
-			// First top beak of the pokemon Doduo. ---//
-			Matrix beakTranslation1;
-			Matrix beakRotation1;
-			Matrix beakRotation2;
-			Matrix beakRotation3;
-
-			beakTranslation1 = Matrix::makeTranslationMatrix(Vector(0.0f, -0.5f, -0.85f));
-			beakRotation1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0, 0.0, 0.0f));
-			beakRotation2 = Matrix::makeRotateMatrix(0.0f, Vector(0.0, 0.0, 1.0f));
-
-			Matrix theBeakModelMatrix1 = theHeadModelMatrix1 * beakTranslation1 * beakRotation2 * beakRotation1;
-
-			Matrix beakMatrix1 = viewMatrix * theBeakModelMatrix1;
-			glLoadMatrixf((GLfloat*)beakMatrix1.mVal);
-			drawTrianglePyramid(3.0f, 0.45f, 0.35f, 1.000f, 0.871f, 0.678f);
-
-			// First bottom beak. ---//
-			beakTranslation1 = Matrix::makeTranslationMatrix(Vector(0.0f, -0.5f, -0.85f));
-			beakRotation1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0, 0.0, 0.0f));
-			beakRotation2 = Matrix::makeRotateMatrix(180.0f, Vector(0.0, 0.0, 1.0f));
-
-			Matrix theBeakModelMatrix2 = theHeadModelMatrix1 * beakTranslation1 * beakRotation2 * beakRotation1;
-
-			Matrix beakMatrix2 = viewMatrix * theBeakModelMatrix2;
-			glLoadMatrixf((GLfloat*)beakMatrix2.mVal);
-			drawTrianglePyramid(2.5f, 0.35f, 0.25f, 1.000f, 0.871f, 0.678f);
-
-			// Drawing the eyes of the pokemon Doduo. ---//
-			for (int e = 0; e < 2; e++)
-			{
-				Matrix eyeTranslate1;
-				Matrix eyeRotate1;
-
-				if (e == 0)
-				{
-					eyeTranslate1 = Matrix::makeTranslationMatrix(Vector(0.5f, 0.15f, -0.925f));
-					eyeRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0, 0.0, 0.0f));
-				}
-				else if (e == 1)
-				{
-					eyeTranslate1 = Matrix::makeTranslationMatrix(Vector(-0.5f, 0.15f, -0.925f));
-					eyeRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0, 0.0, 0.0f));
-				}
-
-				Matrix theEyeModelMatrix1 = theHeadModelMatrix1 * eyeTranslate1 * eyeRotate1;
-
-				Matrix eyeMatrix1 = viewMatrix * theEyeModelMatrix1;
-				glLoadMatrixf((GLfloat*)eyeMatrix1.mVal);
-				drawCylinder(0.05f, 0.35f, 100, 0.1f, 0.1f, 0.1f);
-
-				// Drawing the shiny effect. ---//
-				Matrix shinyEyeTranslate1 = Matrix::makeTranslationMatrix(Vector(0.15f, 0.0225f, 0.1f));
-
-				Matrix theShinyModelMatrix1 = theEyeModelMatrix1 * shinyEyeTranslate1;
-
-				Matrix shinyEyeMatrix1 = viewMatrix * theShinyModelMatrix1;
-				glLoadMatrixf((GLfloat*)shinyEyeMatrix1.mVal);
-				drawCylinder(0.05f, 0.15f, 100, 0.9f, 0.9f, 0.9f);
-
-				// Second shiny effect. ---//
-				Matrix shinyEyeTranslate2 = Matrix::makeTranslationMatrix(Vector(-0.15f, 0.0225f, -0.1f));
-
-				theShinyModelMatrix1 = theEyeModelMatrix1 * shinyEyeTranslate2;
-
-				Matrix shinyEyeMatrix2 = viewMatrix * theShinyModelMatrix1;
-				glLoadMatrixf((GLfloat*)shinyEyeMatrix2.mVal);
-				drawCylinder(0.05f, 0.10f, 100, 0.9f, 0.9f, 0.9f);
-			}
-		}
-
-		/*
-		// Drawing pivot for second neck. ---//
-		Matrix neckPivotTranslation2 = Matrix::makeTranslationMatrix(Vector(-1.0f, 1.75f, -1.0f));
-		Matrix neckPivotRotation2 = Matrix::makeRotateMatrix(30.0f, Vector(1.0f, 0.0f, -1.0f));
-
-		Matrix theNeckPivotModelMatrix2 = theBodyModelMatrix * neckPivotTranslation2 * neckPivotRotation2;
-
-		Matrix neckPivotMatrix2 = viewMatrix * theNeckPivotModelMatrix2;
-		glLoadMatrixf((GLfloat*)neckPivotMatrix2.mVal);
-		drawCube(0.5f, 0.5f, 0.5f);
-
-		// Second neck. ---//
-		Matrix neckTranslation2 = Matrix::makeTranslationMatrix(Vector(0.0f, 2.65f, 0.0f));
-
-		Matrix theNeckModelMatrix2 = theNeckPivotModelMatrix2 * neckTranslation2;
-
-		Matrix neckMatrix2 = viewMatrix * theNeckModelMatrix2;
-		glLoadMatrixf((GLfloat*)neckMatrix2.mVal);
-		drawCylinder(5.0f, 0.2f);
-		*/
-
-		// Leg part. ---//
-		Matrix theLegModelMatrix;
-
-		rot1 += 0.005f;
-
-		// Drawing both legs. ---//
-		for (int j = 0; j < 2; j++)
-		{
-			// Leg pivot for rotation. ---//
-			Matrix legMove1;
-
-			if (j == 0)
-			{
-				legMove1 = Matrix::makeRotateMatrix(-(30.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
-			}
-			else if (j == 1)
-			{
-				legMove1 = Matrix::makeRotateMatrix((30.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
-			}
-
-			Matrix legMove2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.25 * sin(rot1 * 2), 0.0f));
-			Matrix legTranslateAmount1 = Matrix::makeTranslationMatrix(Vector(0.0f + j * 3.0f, 0.0f, 0.0f));
-			Matrix legRotateAmount1 = Matrix::makeRotateMatrix(15.0f, Vector(1.0f, 0.0f, 0.0f));
-
-			theLegModelMatrix = legMove2 * legMove1 * legRotateAmount1 * legTranslateAmount1;
-
-			Matrix pivotLegMatrix1 = viewMatrix * theLegModelMatrix;
-			glLoadMatrixf((GLfloat*)pivotLegMatrix1.mVal);
-			drawCube(0.5f, 0.5f, 0.5f, 0.804f, 0.522f, 0.247f);
-
-			// Upper leg. ---//
-			Matrix leftUpperLegTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -1.5f, 0.75f));
-			Matrix leftUpperLegRotate1 = Matrix::makeRotateMatrix(25.0f, Vector(1.0f, 0.0f, 0.0f));
-
-			theLegModelMatrix = theLegModelMatrix * leftUpperLegTranslate1 * leftUpperLegRotate1;
-
-			Matrix leftUpperLegMatrix1 = viewMatrix * theLegModelMatrix;
-			glLoadMatrixf((GLfloat*)leftUpperLegMatrix1.mVal);
-			drawCylinder(3.0f, 0.2f, 100, 1.000f, 0.871f, 0.678f);
-
-			// Lower leg. ---//
-			Matrix leftLowerLegTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -3.65f, -1.0f));
-			Matrix leftLowerLegRotate1 = Matrix::makeRotateMatrix(-25.0f, Vector(1.0f, 0.0f, 0.0f));
-
-			theLegModelMatrix = theLegModelMatrix * leftLowerLegTranslate1 * leftLowerLegRotate1;
-
-			Matrix leftLowerLegMatrix1 = viewMatrix * theLegModelMatrix;
-			glLoadMatrixf((GLfloat*)leftLowerLegMatrix1.mVal);
-			drawCylinder(5.0f, 0.225f, 100, 1.000f, 0.871f, 0.678f);
-
-			// Ball of foot or ankle. ---//
-			Matrix ankleModelMatrix1;
-			Matrix moveFeet1;
-
-			if (j == 0)
-			{
-				moveFeet1 = Matrix::makeRotateMatrix((-25.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
-			}
-			else if (j == 1)
-			{
-				moveFeet1 = Matrix::makeRotateMatrix(-(-25.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
-			}
-
-			Matrix ankleTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -2.5f, 0.0f));
-			Matrix ankleRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
-
-			ankleModelMatrix1 = theLegModelMatrix * ankleTranslate1 * ankleRotate1 * moveFeet1;
-
-			Matrix ankleLegMatrix1 = viewMatrix * ankleModelMatrix1;
-			glLoadMatrixf((GLfloat*)ankleLegMatrix1.mVal);
-			drawCube(0.5f, 0.5f, 0.5f, 1.000f, 0.871f, 0.678f);
-
-			// 3 main toes for the Duduo pokemon. //
-			for (int f = 0; f < 3; f++)
-			{
-				Matrix feetTranslate1;
-				Matrix feetRotate1;
-
-				// First feet position. ---//
-				if (f == 0)
-				{
-					feetTranslate1 = Matrix::makeTranslationMatrix(Vector(-0.5f, 1.0f, 0.0f));
-					feetRotate1 = Matrix::makeRotateMatrix(-30.0f, Vector(0.0f, 0.0f, 1.0f));
-				}
-				else if (f == 1)
-				{
-					feetTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, 1.0f, 0.0f));
-					feetRotate1 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 0.0f, 1.0f));
-				}
-				else if (f == 2)
-				{
-					feetTranslate1 = Matrix::makeTranslationMatrix(Vector(0.5f, 1.0f, 0.0f));
-					feetRotate1 = Matrix::makeRotateMatrix(30.0f, Vector(0.0f, 0.0f, 1.0f));
-				}
-
-				Matrix theToeModelMatrix1 = ankleModelMatrix1 * feetTranslate1 * feetRotate1;
-
-				Matrix feetMatrix1 = viewMatrix * theToeModelMatrix1;
-				glLoadMatrixf((GLfloat*)feetMatrix1.mVal);
-				drawCylinder(2.0f, 0.185f, 100, 1.000f, 0.871f, 0.678f);
-
-				// First toe position. ---//
-				Matrix toeTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, 1.5f, 0.0f));
-
-				theToeModelMatrix1 = theToeModelMatrix1 * toeTranslate1;
-
-				Matrix feetMatrix2 = viewMatrix * theToeModelMatrix1;
-				glLoadMatrixf((GLfloat*)feetMatrix2.mVal);
-				drawCone(1.0f, 0.2f, 100, 0.863f, 0.863f, 0.863f);
-			}
+		// ----------------------------------------------------------------------------------------------------
+		//// Drawing the body. ---//
+
+		//Matrix theBodyModelMatrix;
+
+		//Matrix bodyTranslation1 = Matrix::makeTranslationMatrix(Vector(1.5f, 1.85f, 0.5f));
+		//Matrix bodyMove1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.15 * sin(rot1 * 2), 0.0f));
+
+		//theBodyModelMatrix = bodyMove1 * bodyTranslation1;
+
+		//Matrix bodyMatrix1 = viewMatrix * theBodyModelMatrix;
+		//glLoadMatrixf((GLfloat*)bodyMatrix1.mVal);
+		////drawCube(3.25f, 3.5f, 3.25f, 0.804f, 0.522f, 0.247f);
+		//drawSphere(0.0f, 360.0f, 360.0f, 180.0f, 2.5f, 20.0f, 20.0f, 1.0f, 1.0f, 0.804f, 0.522f, 0.247f);
+
+		//// Drawing 2 necks. ---//
+
+		//for (int x = 0; x < 2; x++)
+		//{
+		//	Matrix neckPivotTranslation1;
+		//	Matrix neckPivotRotation1;
+
+		//	// Drawing pivot for first neck. ---//
+		//	if (x == 0)
+		//	{
+		//		neckPivotTranslation1 = Matrix::makeTranslationMatrix(Vector(1.0f, 1.75f, -1.0f));
+		//		neckPivotRotation1 = Matrix::makeRotateMatrix(30.0f, Vector(1.0f, 0.0f, 1.0f));
+		//	}
+		//	else if (x == 1)
+		//	{
+		//		neckPivotTranslation1 = Matrix::makeTranslationMatrix(Vector(-1.0f, 1.75f, -1.0f));
+		//		neckPivotRotation1 = Matrix::makeRotateMatrix(30.0f, Vector(1.0f, 0.0f, -1.0f));
+		//	}
+
+		//	Matrix neckMove1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.1 * sin(rot1 * 2), 0.0f));
+
+		//	Matrix theNeckPivotModelMatrix1 = theBodyModelMatrix * neckMove1 * neckPivotTranslation1 * neckPivotRotation1;
+
+		//	Matrix neckPivotMatrix1 = viewMatrix * theNeckPivotModelMatrix1;
+		//	glLoadMatrixf((GLfloat*)neckPivotMatrix1.mVal);
+		//	drawCube(0.5f, 0.5f, 0.5f, 0.804f, 0.522f, 0.247f);
+
+		//	// First neck. ---//
+		//	Matrix neckTranslation1 = Matrix::makeTranslationMatrix(Vector(0.0f, 2.15f, 0.0f));
+
+		//	Matrix theNeckModelMatrix1 = theNeckPivotModelMatrix1 * neckTranslation1;
+
+		//	Matrix neckMatrix1 = viewMatrix * theNeckModelMatrix1;
+		//	glLoadMatrixf((GLfloat*)neckMatrix1.mVal);
+		//	drawCylinder(4.5f, 0.2f, 100, 0.212f, 0.212f, 0.212f);
+
+		//	// First head. ---//
+		//	Matrix headTranslation1;
+		//	Matrix headRotation1;
+		//	Matrix headMove1;
+
+		//	if (x == 0)
+		//	{
+		//		headTranslation1 = Matrix::makeTranslationMatrix(Vector(-0.25f, 3.0f, 0.0f));
+		//		headRotation1 = Matrix::makeRotateMatrix(-30.0f, Vector(1.0f, 0.0f, 1.0f));
+		//		headMove1 = Matrix::makeRotateMatrix(2.0f * cos(rot1), Vector(0.0f, 0.0f, 1.0f));
+		//	}
+		//	else if (x == 1)
+		//	{
+		//		headTranslation1 = Matrix::makeTranslationMatrix(Vector(0.25f, 3.0f, 0.0f));
+		//		headRotation1 = Matrix::makeRotateMatrix(-30.0f, Vector(1.0f, 0.0f, -1.0f));
+		//		headMove1 = Matrix::makeRotateMatrix(-(2.0f * cos(rot1)), Vector(0.0f, 0.0f, 1.0f));
+		//	}
+
+		//	Matrix theHeadModelMatrix1 = theNeckModelMatrix1 * headMove1 * headTranslation1 * headRotation1;
+
+		//	Matrix headMatrix1 = viewMatrix * theHeadModelMatrix1;
+		//	glLoadMatrixf((GLfloat*)headMatrix1.mVal);
+		//	//drawCube(1.85f, 1.85f, 1.85f, 0.804f, 0.522f, 0.247f);
+		//	drawSphere(0.0f, 360.0f, 360.0f, 180.0f, 1.25f, 20.0f, 20.0f, 1.0f, 1.0f, 0.804f, 0.522f, 0.247f);
+
+		//	// First top beak of the pokemon Doduo. ---//
+		//	Matrix beakTranslation1;
+		//	Matrix beakRotation1;
+		//	Matrix beakRotation2;
+		//	Matrix beakRotation3;
+
+		//	beakTranslation1 = Matrix::makeTranslationMatrix(Vector(0.0f, -0.5f, -1.05f));
+		//	beakRotation1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0, 0.0, 0.0f));
+		//	beakRotation2 = Matrix::makeRotateMatrix(0.0f, Vector(0.0, 0.0, 1.0f));
+
+		//	Matrix theBeakModelMatrix1 = theHeadModelMatrix1 * beakTranslation1 * beakRotation2 * beakRotation1;
+
+		//	Matrix beakMatrix1 = viewMatrix * theBeakModelMatrix1;
+		//	glLoadMatrixf((GLfloat*)beakMatrix1.mVal);
+		//	drawTrianglePyramid(3.0f, 0.45f, 0.35f, 1.000f, 0.871f, 0.678f);
+
+		//	// First bottom beak. ---//
+		//	beakTranslation1 = Matrix::makeTranslationMatrix(Vector(0.0f, -0.5f, -0.95f));
+		//	beakRotation1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0, 0.0, 0.0f));
+		//	beakRotation2 = Matrix::makeRotateMatrix(180.0f, Vector(0.0, 0.0, 1.0f));
+
+		//	Matrix theBeakModelMatrix2 = theHeadModelMatrix1 * beakTranslation1 * beakRotation2 * beakRotation1;
+
+		//	Matrix beakMatrix2 = viewMatrix * theBeakModelMatrix2;
+		//	glLoadMatrixf((GLfloat*)beakMatrix2.mVal);
+		//	drawTrianglePyramid(2.5f, 0.35f, 0.25f, 1.000f, 0.871f, 0.678f);
+
+		//	// Drawing the eyes of the pokemon Doduo. ---//
+		//	for (int e = 0; e < 2; e++)
+		//	{
+		//		Matrix eyeTranslate1;
+		//		Matrix eyeRotate1;
+
+		//		if (e == 0)
+		//		{
+		//			eyeTranslate1 = Matrix::makeTranslationMatrix(Vector(0.5f, 0.15f, -0.95f));
+		//			eyeRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0, 0.0, 0.0f));
+		//		}
+		//		else if (e == 1)
+		//		{
+		//			eyeTranslate1 = Matrix::makeTranslationMatrix(Vector(-0.5f, 0.15f, -0.95f));
+		//			eyeRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0, 0.0, 0.0f));
+		//		}
+
+		//		Matrix theEyeModelMatrix1 = theHeadModelMatrix1 * eyeTranslate1 * eyeRotate1;
+
+		//		Matrix eyeMatrix1 = viewMatrix * theEyeModelMatrix1;
+		//		glLoadMatrixf((GLfloat*)eyeMatrix1.mVal);
+		//		//drawCylinder(0.05f, 0.35f, 100, 0.1f, 0.1f, 0.1f);
+		//		drawSphere(0.0f, 360.0f, 360.0f, 180.0f, 0.4f, 20.0f, 20.0f, 1.0f, 1.0f, 0.1f, 0.1f, 0.1f);
+
+		//		// Drawing the shiny effect. ---//
+		//		Matrix shinyEyeTranslate1 = Matrix::makeTranslationMatrix(Vector(0.05f, 0.2f, 0.1f));
+
+		//		Matrix theShinyModelMatrix1 = theEyeModelMatrix1 * shinyEyeTranslate1;
+
+		//		Matrix shinyEyeMatrix1 = viewMatrix * theShinyModelMatrix1;
+		//		glLoadMatrixf((GLfloat*)shinyEyeMatrix1.mVal);
+		//		//drawCylinder(0.05f, 0.15f, 100, 0.9f, 0.9f, 0.9f);
+		//		drawSphere(0.0f, 360.0f, 360.0f, 180.0f, 0.2f, 20.0f, 20.0f, 1.0f, 1.0f, 0.9f, 0.9f, 0.9f);
+
+		//		// Second shiny effect. ---//
+		//		Matrix shinyEyeTranslate2 = Matrix::makeTranslationMatrix(Vector(-0.15f, 0.275f, -0.1f));
+
+		//		theShinyModelMatrix1 = theEyeModelMatrix1 * shinyEyeTranslate2;
+
+		//		Matrix shinyEyeMatrix2 = viewMatrix * theShinyModelMatrix1;
+		//		glLoadMatrixf((GLfloat*)shinyEyeMatrix2.mVal);
+		//		//drawCylinder(0.05f, 0.10f, 100, 0.9f, 0.9f, 0.9f);
+		//		drawSphere(0.0f, 360.0f, 360.0f, 180.0f, 0.1f, 20.0f, 20.0f, 1.0f, 1.0f, 0.9f, 0.9f, 0.9f);
+		//	}
+		//}
+
+		///*
+		//// Drawing pivot for second neck. ---//
+		//Matrix neckPivotTranslation2 = Matrix::makeTranslationMatrix(Vector(-1.0f, 1.75f, -1.0f));
+		//Matrix neckPivotRotation2 = Matrix::makeRotateMatrix(30.0f, Vector(1.0f, 0.0f, -1.0f));
+
+		//Matrix theNeckPivotModelMatrix2 = theBodyModelMatrix * neckPivotTranslation2 * neckPivotRotation2;
+
+		//Matrix neckPivotMatrix2 = viewMatrix * theNeckPivotModelMatrix2;
+		//glLoadMatrixf((GLfloat*)neckPivotMatrix2.mVal);
+		//drawCube(0.5f, 0.5f, 0.5f);
+
+		//// Second neck. ---//
+		//Matrix neckTranslation2 = Matrix::makeTranslationMatrix(Vector(0.0f, 2.65f, 0.0f));
+
+		//Matrix theNeckModelMatrix2 = theNeckPivotModelMatrix2 * neckTranslation2;
+
+		//Matrix neckMatrix2 = viewMatrix * theNeckModelMatrix2;
+		//glLoadMatrixf((GLfloat*)neckMatrix2.mVal);
+		//drawCylinder(5.0f, 0.2f);
+		//*/
+
+		//// Leg part. ---//
+		//Matrix theLegModelMatrix;
+
+		//rot1 += 0.15;
+		////rot1 += 0.01f;
+		//
+		//// Drawing both legs. ---//
+		//for (int j = 0; j < 2; j++)
+		//{
+		//	// Leg pivot for rotation. ---//
+		//	Matrix legMove1;
+
+		//	if (j == 0)
+		//	{
+		//		legMove1 = Matrix::makeRotateMatrix(-(30.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
+		//	}
+		//	else if (j == 1)
+		//	{
+		//		legMove1 = Matrix::makeRotateMatrix((30.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
+		//	}
+
+		//	Matrix legMove2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.25 * sin(rot1 * 2), 0.0f));
+		//	Matrix legTranslateAmount1 = Matrix::makeTranslationMatrix(Vector(0.0f + j * 3.0f, 0.0f, 0.0f));
+		//	Matrix legRotateAmount1 = Matrix::makeRotateMatrix(15.0f, Vector(1.0f, 0.0f, 0.0f));
+
+		//	theLegModelMatrix = legMove2 * legMove1 * legRotateAmount1 * legTranslateAmount1;
+
+		//	Matrix pivotLegMatrix1 = viewMatrix * theLegModelMatrix;
+		//	glLoadMatrixf((GLfloat*)pivotLegMatrix1.mVal);
+		//	drawCube(0.5f, 0.5f, 0.5f, 0.804f, 0.522f, 0.247f);
+
+		//	// Upper leg. ---//
+		//	Matrix leftUpperLegTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -1.5f, 0.75f));
+		//	Matrix leftUpperLegRotate1 = Matrix::makeRotateMatrix(25.0f, Vector(1.0f, 0.0f, 0.0f));
+
+		//	theLegModelMatrix = theLegModelMatrix * leftUpperLegTranslate1 * leftUpperLegRotate1;
+
+		//	Matrix leftUpperLegMatrix1 = viewMatrix * theLegModelMatrix;
+		//	glLoadMatrixf((GLfloat*)leftUpperLegMatrix1.mVal);
+		//	drawCylinder(3.0f, 0.2f, 100, 1.000f, 0.871f, 0.678f);
+
+		//	// Lower leg. ---//
+		//	Matrix leftLowerLegTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -3.65f, -1.0f));
+		//	Matrix leftLowerLegRotate1 = Matrix::makeRotateMatrix(-25.0f, Vector(1.0f, 0.0f, 0.0f));
+
+		//	theLegModelMatrix = theLegModelMatrix * leftLowerLegTranslate1 * leftLowerLegRotate1;
+
+		//	Matrix leftLowerLegMatrix1 = viewMatrix * theLegModelMatrix;
+		//	glLoadMatrixf((GLfloat*)leftLowerLegMatrix1.mVal);
+		//	drawCylinder(5.0f, 0.225f, 100, 1.000f, 0.871f, 0.678f);
+
+		//	// Ball of foot or ankle. ---//
+		//	Matrix ankleModelMatrix1;
+		//	Matrix moveFeet1;
+
+		//	if (j == 0)
+		//	{
+		//		moveFeet1 = Matrix::makeRotateMatrix((-25.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
+		//	}
+		//	else if (j == 1)
+		//	{
+		//		moveFeet1 = Matrix::makeRotateMatrix(-(-25.0f * sin(rot1)), Vector(1.0f, 0.0f, 0.0f));
+		//	}
+
+		//	Matrix ankleTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, -2.5f, 0.0f));
+		//	Matrix ankleRotate1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
+
+		//	ankleModelMatrix1 = theLegModelMatrix * ankleTranslate1 * ankleRotate1 * moveFeet1;
+
+		//	Matrix ankleLegMatrix1 = viewMatrix * ankleModelMatrix1;
+		//	glLoadMatrixf((GLfloat*)ankleLegMatrix1.mVal);
+		//	drawCube(0.5f, 0.5f, 0.5f, 1.000f, 0.871f, 0.678f);
+
+		//	// 3 main toes for the Duduo pokemon. //
+		//	for (int f = 0; f < 3; f++)
+		//	{
+		//		Matrix feetTranslate1;
+		//		Matrix feetRotate1;
+
+		//		// First feet position. ---//
+		//		if (f == 0)
+		//		{
+		//			feetTranslate1 = Matrix::makeTranslationMatrix(Vector(-0.5f, 1.0f, 0.0f));
+		//			feetRotate1 = Matrix::makeRotateMatrix(-30.0f, Vector(0.0f, 0.0f, 1.0f));
+		//		}
+		//		else if (f == 1)
+		//		{
+		//			feetTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, 1.0f, 0.0f));
+		//			feetRotate1 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 0.0f, 1.0f));
+		//		}
+		//		else if (f == 2)
+		//		{
+		//			feetTranslate1 = Matrix::makeTranslationMatrix(Vector(0.5f, 1.0f, 0.0f));
+		//			feetRotate1 = Matrix::makeRotateMatrix(30.0f, Vector(0.0f, 0.0f, 1.0f));
+		//		}
+
+		//		Matrix theToeModelMatrix1 = ankleModelMatrix1 * feetTranslate1 * feetRotate1;
+
+		//		Matrix feetMatrix1 = viewMatrix * theToeModelMatrix1;
+		//		glLoadMatrixf((GLfloat*)feetMatrix1.mVal);
+		//		drawCylinder(2.0f, 0.185f, 100, 1.000f, 0.871f, 0.678f);
+
+		//		// First toe position. ---//
+		//		Matrix toeTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, 1.5f, 0.0f));
+
+		//		theToeModelMatrix1 = theToeModelMatrix1 * toeTranslate1;
+
+		//		Matrix feetMatrix2 = viewMatrix * theToeModelMatrix1;
+		//		glLoadMatrixf((GLfloat*)feetMatrix2.mVal);
+		//		drawCone(1.0f, 0.2f, 100, 0.863f, 0.863f, 0.863f);
+		//	}
+		//	 ----------------------------------------------------------------------------------------------------
+			
 
 			/*
 			// Second feet position. ---//
@@ -881,7 +977,7 @@ public:
 			quadric = gluNewQuadric();
 			gluSphere(quadric, 0.5, 30, 30);
 			*/
-		}
+		//} ----------------------------------------------------------------------------------------------------
 
 		/*
 		// 3 main toes on right side. ---//
@@ -916,8 +1012,37 @@ public:
 		glLoadMatrixf((GLfloat*)viewSpaceMatrix.mVal);
 		drawCube(); //This cube is affected by the last applied matrix
 		*/
+
+		glDepthMask(true);
+
+		Matrix WallTranslate1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
+		Matrix WallTranslate2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, -10.0f));
+
+		Matrix theWallMatrix1 = WallTranslate1;
+		Matrix modelMatrix1 = viewMatrix * theWallMatrix1;
+		glLoadMatrixf((GLfloat*)modelMatrix1.mVal);
+		DrawWall(5.0f);
+
+		Matrix theWallMatrix2 = WallTranslate2;
+		Matrix modelMatrix2 = viewMatrix * theWallMatrix2;
+		glLoadMatrixf((GLfloat*)modelMatrix2.mVal);
+		DrawWall(5.0f);
+
+		// Alpha Blend ---//
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// Additive Blend ---//
+		glBlendFunc(GL_ONE, GL_ONE);
+
+		glDepthMask(false);
+
+		// Multiply Blend (Also called modulate) ---//
+		//glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+		//glBlendFunc(GL_DST_COLOR, GL_ZERO);
 		
-		//drawTextureCube(3.0f);
+		drawTextureCube(3.0f);
+
+		glDepthMask(true);
 	}
 };
 

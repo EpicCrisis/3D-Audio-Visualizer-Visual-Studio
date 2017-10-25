@@ -78,6 +78,9 @@ int main()
 	glfwSetCursorPosCallback(window, onMouseMove);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+	//glfwSwapInterval(0); // Switch off VSync. ---//
+	glfwSwapInterval(1); // Switch on VSync. ---//
+
 	// initialize OpenGL.
 	glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);				// Black Background
@@ -103,12 +106,20 @@ int main()
 
 		// Simple camera controller. (KEYBOARD)
 		float camMoveOffsetX = 0.0f, camMoveOffsetY = 0.0f, camMoveOffsetZ = 0.0f;
-		if (glfwGetKey(window, 'A')) camMoveOffsetX -= 0.005f;
-		if (glfwGetKey(window, 'D')) camMoveOffsetX += 0.005f;
-		if (glfwGetKey(window, 'W')) camMoveOffsetZ -= 0.005f;
-		if (glfwGetKey(window, 'S')) camMoveOffsetZ += 0.005f;
-		if (glfwGetKey(window, 'X')) camMoveOffsetY -= 0.005f;
-		if (glfwGetKey(window, 'Z')) camMoveOffsetY += 0.005f;
+		if (glfwGetKey(window, 'A')) camMoveOffsetX -= 0.5f;
+		if (glfwGetKey(window, 'D')) camMoveOffsetX += 0.5f;
+		if (glfwGetKey(window, 'W')) camMoveOffsetZ -= 0.5f;
+		if (glfwGetKey(window, 'S')) camMoveOffsetZ += 0.5f;
+		if (glfwGetKey(window, 'X')) camMoveOffsetY -= 0.5f;
+		if (glfwGetKey(window, 'Z')) camMoveOffsetY += 0.5f;
+		
+		/*if (glfwGetKey(window, 'A')) camMoveOffsetX -= 0.05f;
+		if (glfwGetKey(window, 'D')) camMoveOffsetX += 0.05f;
+		if (glfwGetKey(window, 'W')) camMoveOffsetZ -= 0.05f;
+		if (glfwGetKey(window, 'S')) camMoveOffsetZ += 0.05f;
+		if (glfwGetKey(window, 'X')) camMoveOffsetY -= 0.05f;
+		if (glfwGetKey(window, 'Z')) camMoveOffsetY += 0.05f;*/
+		
 		gCamera.translateLocal(camMoveOffsetX, camMoveOffsetY, camMoveOffsetZ);
 
 		// Check if ESC key was pressed
