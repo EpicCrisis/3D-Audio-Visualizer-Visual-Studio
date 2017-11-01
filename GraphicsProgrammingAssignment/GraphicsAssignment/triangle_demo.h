@@ -2,12 +2,73 @@
 #define _TRIANGLE_DEMO_H
 
 #include <cmath>
-#include "demo_base.h"
-#include "lodepng.h"
 #include <vector>
 #include <iostream>
+#include "demo_base.h"
+#include "lodepng.h"
 
-#define TEXTURE_COUNT 3
+#define TEXTURE_COUNT 6
+
+const int RECT_VERTEX_ARRAY_SIZE = 0;
+
+class Plane
+{
+private:
+	float delta = 0.0f;
+
+	float getY(float j)
+	{
+		return amplitude * sinf(delta + (j * frequency));
+	}
+
+public:
+
+	float speed;
+	float amplitude;
+	float frequency;
+	float size;
+	int iteration;
+
+	Plane(float speed, float amplitude, float frequency, float size, int iterationAmount = 10)
+	{
+		this->speed = speed;
+		this->amplitude = amplitude;
+		this->frequency = frequency;
+		this->size = size;
+		this->iteration = iterationAmount;
+	}
+
+	void drawPlane()
+	{
+		float halfSize = size / 2.0f;
+		float increment = 1.0f / iteration;
+
+		for (float i = -halfSize; i < halfSize - increment; i += increment)
+		{
+			for (float j = -halfSize; j < halfSize - increment; j += increment)
+			{
+				glBegin(GL_TRIANGLES);
+
+				glVertex3f(j, getY(j), i);
+				glVertex3f(j, getY(j), i + increment);
+				glVertex3f(j + increment, getY(j + increment), i);
+
+				glVertex3f(j + increment, getY(j + increment), i + increment);
+				glVertex3f(j + increment, getY(j + increment), i);
+				glVertex3f(j, getY(j), i + increment);
+
+				glEnd();
+			}
+		}
+	}
+
+	void animatePlaneWave()
+	{
+		delta += speed;
+		std::cout << "Delta = " << delta << std::endl;
+		drawPlane();
+	}
+};
 
 class Vertex
 {
@@ -228,7 +289,8 @@ public:
 		glVertex3f(sizeX, sizeY, sizeZ);
 		glVertex3f(sizeX, sizeY, -sizeZ);
 
-		glEnd();										// Finished Drawing The Triangles
+		// Finished Drawing The Triangles
+		glEnd();										
 	}
 
 	void drawTextureCube(float size = 1.0f)
@@ -293,36 +355,6 @@ public:
 		glTexCoord2f(0.0f, 1.0f), glVertex3f(size, -size, size);
 		glTexCoord2f(0.0f, 0.0f), glVertex3f(size, size, size);
 		glTexCoord2f(1.0f, 0.0f), glVertex3f(size, size, -size);
-
-		////Front square
-
-		//glTexCoord2f(0.0f, 0.0f), glVertex3f(-3.0f, -3.0f, 0.0f);
-		//glTexCoord2f(1.0f, 0.0f), glVertex3f(3.0f, -3.0f, 0.0f);
-		//glTexCoord2f(1.0f, 1.0f), glVertex3f(3.0f, 3.0f, 0.0f);
-
-		//glTexCoord2f(1.0f, 1.0f), glVertex3f(3.0f, 3.0f, 0.0f);
-		//glTexCoord2f(0.0f, 1.0f), glVertex3f(-3.0f, 3.0f, 0.0f);
-		//glTexCoord2f(0.0f, 0.0f), glVertex3f(-3.0f, -3.0f, 0.0f);
-
-		////Back square
-
-		//glTexCoord2f(0.0f, 0.0f), glVertex3f(-3.0f, -3.0f, 3.0f);
-		//glTexCoord2f(1.0f, 0.0f), glVertex3f(3.0f, -3.0f, 3.0f);
-		//glTexCoord2f(1.0f, 1.0f), glVertex3f(3.0f, 3.0f, 3.0f);
-
-		//glTexCoord2f(1.0f, 1.0f), glVertex3f(3.0f, 3.0f, 3.0f);
-		//glTexCoord2f(0.0f, 1.0f), glVertex3f(-3.0f, 3.0f, 3.0f);
-		//glTexCoord2f(0.0f, 0.0f), glVertex3f(-3.0f, -3.0f, 3.0f);
-
-		////Left square
-
-		//glTexCoord2f(0.0f, 0.0f), glVertex3f(-3.0f, -3.0f, 0.0f);
-		//glTexCoord2f(1.0f, 0.0f), glVertex3f(3.0f, -3.0f, 0.0f);
-		//glTexCoord2f(1.0f, 1.0f), glVertex3f(3.0f, 3.0f, 0.0f);
-
-		//glTexCoord2f(1.0f, 1.0f), glVertex3f(3.0f, 3.0f, 0.0f);
-		//glTexCoord2f(0.0f, 1.0f), glVertex3f(-3.0f, 3.0f, 0.0f);
-		//glTexCoord2f(0.0f, 0.0f), glVertex3f(-3.0f, -3.0f, 0.0f);
 
 		glEnd();
 	}
@@ -395,7 +427,8 @@ public:
 		float halfHeight = height / 2.0f;
 
 		glColor3f(red, green, blue);
-		glBegin(GL_TRIANGLES);							// Drawing Using Triangles
+		// Drawing Using Triangles
+		glBegin(GL_TRIANGLES);
 
 		float t = 360.0f / iteration;
 
@@ -451,8 +484,8 @@ public:
 			//Third point
 			glVertex3f(x2, offsetY + halfHeight, z2);
 		}
-
-		glEnd();										// Finished Drawing The Triangles
+		// Finished Drawing The Triangles
+		glEnd();										
 	}
 
 	void drawCone(float height, float radius, int iteration = 100, float red = 1.0f, float green = 1.0f, float blue = 1.0f)
@@ -464,7 +497,8 @@ public:
 		float halfHeight = height / 2.0f;
 
 		glColor3f(red, green, blue);
-		glBegin(GL_TRIANGLES);							// Drawing Using Triangles
+		// Drawing Using Triangles
+		glBegin(GL_TRIANGLES);
 
 		float t = 360.0f / iteration;
 
@@ -498,8 +532,8 @@ public:
 			//Second point
 			glVertex3f(x2, offsetY - halfHeight, z2);
 		}
-
-		glEnd();										// Finished Drawing The Triangles
+		// Finished Drawing The Triangles
+		glEnd();
 	}
 
 	void drawTrianglePyramid(float height, float width, float breadth, float red = 1.0f, float green = 1.0f, float blue = 1.0f)
@@ -533,7 +567,7 @@ public:
 		glEnd();
 	}
 
-	void drawVertexCube(float size = 1.0f)
+	void drawVertexCube(GLuint textureID, float size = 1.0f)
 	{
 		GLfloat vertices[] =
 		{
@@ -591,7 +625,6 @@ public:
 			size, -size, -size,
 			-size, -size, -size,
 		};
-
 
 		GLubyte colors[] =
 		{
@@ -708,7 +741,7 @@ public:
 		};
 
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, mTextureID[0]);
+		glBindTexture(GL_TEXTURE_2D, textureID);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);
@@ -725,94 +758,33 @@ public:
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 
-	void drawPlane(float size, int iterations)
-	{
-		GLfloat vertices[] =
-		{
-			// Up //
-			size, 0.0f, size,
-			-size, 0.0f, size,
-			-size, 0.0f, -size,
+	//Matrix ovalOrbiter(const Matrix& viewMatrix, float rot1, float rot2, float amplitude, float l1, float l2)
+	//{
+	//	// Matrix Transformation //
+	//	Matrix translate1 = Matrix::makeTranslationMatrix(Vector(0.0f, amplitude * sin(rot1 * PI / 180.0f), 0.0f));
+	//	Matrix rotate1 = Matrix::makeRotateMatrix(rot2, Vector(0.0f, 1.0f, 0.0f));
+	//	Matrix translate2 = Matrix::makeTranslationMatrix(Vector(l1 * cos(rot2 * PI / 180.0f), 0.0f, l2 * sin(rot2 * PI / 180.0f)));
+	//	Matrix scale1 = Matrix::makeScaleMatrix(Vector(2.0f, 1.0f, 3.0f));
 
-			size, 0.0f, size,
-			size, 0.0f, -size,
-			-size, 0.0f, -size,
-		};
+	//	// NOTE on OpenGL Matrix model //
+	//	// Screen = Proj * View * Model //
+	//	// Model = TransformC(3rd) * TransformB(2nd) * TransformA(1st) (Transform could be Rotate, Scale, Translate, etc) //
 
-		glEnable(GL_TEXTURE_2D);
-		//glBindTexture(GL_TEXTURE_2D, mTextureID[0]);
+	//	// Perform Model Transformation //
 
-		glEnableClientState(GL_VERTEX_ARRAY);
-		//glEnableClientState(GL_COLOR_ARRAY);
-		//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	//	Matrix modelMatrix = translate2;
 
-		glVertexPointer(3, GL_FLOAT, 0, vertices);
-		//glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-		//glColorPointer(3, GL_UNSIGNED_BYTE, 0, colors);
+	//	Matrix viewSpaceMatrix = viewMatrix * modelMatrix;
 
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+	//	return viewSpaceMatrix;
+	//}
 
-		glDisableClientState(GL_VERTEX_ARRAY);
-		//glDisableClientState(GL_COLOR_ARRAY);
-		//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	}
+	//float rot1 = 0.0f;
+	//float rot2 = 0.0f;
 
-	/*
-	void drawIcosahedron()
-	{
-		float t = (1.0f + sqrt(5.0)) / 2.0;
+	//float cubeBaseAngle = 0.0f;
 
-		glBegin(GL_TRIANGLES);
-
-		glVertex3f(-1.0f, t, 0);
-		glVertex3f(1.0f, t, 0);
-
-		glVertex3f(-1.0f, -t, 0);
-		glVertex3f(1.0f, -t, 0);
-
-		glVertex3f(0, -1.0f, t);
-		glVertex3f(0, 1.0f, t);
-
-		glVertex3f(0, -1.0f, -t);
-		glVertex3f(0, 1.0f, -t);
-
-		glVertex3f(t, 0, -1.0f);
-		glVertex3f(t, 0, 1.0f);
-
-		glVertex3f(-t, 0, -1.0f);
-		glVertex3f(-t, 0, 1.0f);
-
-		glEnd();
-	}
-	/*
-
-	/*
-	Matrix ovalOrbiter(const Matrix& viewMatrix, float rot1, float rot2, float amplitude, float l1, float l2)
-	{
-		Matrix Transformation
-		Matrix translate1 = Matrix::makeTranslationMatrix(Vector(0.0f, amplitude * sin(rot1 * PI / 180.0f), 0.0f));
-		Matrix rotate1 = Matrix::makeRotateMatrix(rot2, Vector(0.0f, 1.0f, 0.0f));
-		Matrix translate2 = Matrix::makeTranslationMatrix(Vector(l1 * cos(rot2 * PI / 180.0f), 0.0f, l2 * sin(rot2 * PI / 180.0f)));
-		Matrix scale1 = Matrix::makeScaleMatrix(Vector(2.0f, 1.0f, 3.0f));
-
-		// NOTE on OpenGL Matrix model //
-		// Screen = Proj * View * Model //
-		// Model = TransformC(3rd) * TransformB(2nd) * TransformA(1st) (Transform could be Rotate, Scale, Translate, etc) //
-
-		// Perform Model Transformation //
-		
-		Matrix modelMatrix = translate2;
-
-		Matrix viewSpaceMatrix = viewMatrix * modelMatrix;
-
-		return viewSpaceMatrix;
-	}
-	*/
-
-	float rot1 = 0.0f;
-	float rot2 = 0.0f;
-
-	float cubeBaseAngle = 0.0f;
+	Plane plane = Plane(0.05f, 0.2f, 3.0f, 10.0f, 10);
 
 	void draw(const Matrix& viewMatrix)
 	{
@@ -820,74 +792,66 @@ public:
 
 		glLoadMatrixf((GLfloat*)viewMatrix.mVal);
 
-		drawPlane(1.0f, 100);
-
-		//drawVertexCube(1.0f);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 		// Show Wireframes. //
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+
+		plane.animatePlaneWave();
+
+		//drawVertexCube(1, 3.0f);
 
 		//drawCube();
 		//drawPyramid();
 		//drawCylinder(2.0f, 1.0f);
 		//drawCone(2.0f, 1.0f);
 
-		/*
-		// Oval Orbiter
-		rot1 += 0.1f;
-		rot2 += 0.05f;
+		//// Oval Orbiter //
+		//rot1 += 0.1f;
+		//rot2 += 0.05f;
 
-		glLoadMatrixf((GLfloat*)ovalOrbiter(viewMatrix, rot2, rot1, 2.0f, 5.0f, 2.5f).mVal);
-		drawCube();
-		*/
+		//glLoadMatrixf((GLfloat*)ovalOrbiter(viewMatrix, rot2, rot1, 2.0f, 5.0f, 2.5f).mVal);
+		//drawCube();
+		
+		//// "DNA" Animation //
+		//float radius = 2.0f;
+		//float offsetY = 0.2f;
+		//float offsetAngle = 30.0f;
+		//int cubeAmount = 50;
 
-		/*
-		// "DNA" Animation
-		float radius = 2.0f;
-		float offsetY = 0.2f;
-		float offsetAngle = 30.0f;
-		int cubeAmount = 50;
+		//for (int i = 0; i < cubeAmount; i++)
+		//{
+		//	//Method 1 - Translate + Rotation
+		//	Matrix translationCube = Matrix::makeTranslationMatrix(Vector(radius, offsetY * i, 0));
+		//	Matrix rotationCube = Matrix::makeRotateMatrix(cubeBaseAngle - (i * offsetAngle), Vector(0, 1, 0));
+		//	Matrix cubeMatrix = viewMatrix * rotationCube * translationCube;
+		//	//glLoadMatrixf((GLfloat*)cubeMatrix.mVal);
 
-		for (int i = 0; i < cubeAmount; i++)
-		{
-			//Method 1 - Translate + Rotation
-			Matrix translationCube = Matrix::makeTranslationMatrix(Vector(radius, offsetY * i, 0));
-			Matrix rotationCube = Matrix::makeRotateMatrix(cubeBaseAngle - (i * offsetAngle), Vector(0, 1, 0));
-			Matrix cubeMatrix = viewMatrix * rotationCube * translationCube;
-			//glLoadMatrixf((GLfloat*)cubeMatrix.mVal);
+		//	//Method 2 - Use circle formula
+		//	Matrix magicMatrix = Matrix::makeTranslationMatrix(Vector(cosf((cubeBaseAngle - (i * offsetAngle)) * PI / 180.0f) * radius, offsetY * i, sinf((cubeBaseAngle - (i * offsetAngle)) * PI / 180.0f) * radius));
+		//	glLoadMatrixf((GLfloat*)(viewMatrix * magicMatrix).mVal);
 
-			//Method 2 - Use circle formula
-			Matrix magicMatrix = Matrix::makeTranslationMatrix(Vector(cosf((cubeBaseAngle - (i * offsetAngle)) * PI / 180.0f) * radius, offsetY * i, sinf((cubeBaseAngle - (i * offsetAngle)) * PI / 180.0f) * radius));
-			glLoadMatrixf((GLfloat*)(viewMatrix * magicMatrix).mVal);
+		//	drawCube(0.5f);
+		//}
+		//cubeBaseAngle += 0.05f;
 
-			drawCube(0.5f);
-		}
-		cubeBaseAngle += 0.05f;
-		*/
-
-		/*
-		Matrix coneTranslation = Matrix::makeTranslationMatrix(Vector(0.0f, 4.0f, 4.0f));
+		/*Matrix coneTranslation = Matrix::makeTranslationMatrix(Vector(0.0f, 4.0f, 4.0f));
 		Matrix coneRotation = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 1.0f, 1.0f));
 		Matrix coneMatrix = viewMatrix * coneRotation;
 		glLoadMatrixf((GLfloat*)coneMatrix.mVal);
-		drawCone(1.0f, 0.2f);
-		*/
+		drawCone(1.0f, 0.2f);*/
 
-		/*
-		// Example for sequences of transforms. ---//
-		Matrix modelMatrix1;
-		Matrix viewSpaceMatrix = viewMatrix * modelMatrix1;
-		glLoadMatrixf((GLfloat*)viewSpaceMatrix.mVal);
-		drawCube(); //This cube is affected by the last applied matrix
+		//// Example for sequences of transforms. ---//
+		//Matrix modelMatrix1;
+		//Matrix viewSpaceMatrix = viewMatrix * modelMatrix1;
+		//glLoadMatrixf((GLfloat*)viewSpaceMatrix.mVal);
+		//drawCube(); //This cube is affected by the last applied matrix
 
-		Matrix modelMatrix2;
-		Matrix viewSpaceMatrix = viewMatrix * modelMatrix2;
-		glLoadMatrixf((GLfloat*)viewSpaceMatrix.mVal);
-		drawCube(); //This cube is affected by the last applied matrix
-		*/
+		//Matrix modelMatrix2;
+		//Matrix viewSpaceMatrix = viewMatrix * modelMatrix2;
+		//glLoadMatrixf((GLfloat*)viewSpaceMatrix.mVal);
+		//drawCube(); //This cube is affected by the last applied matrix
 	}
-
-	
 
 	//void drawDepthMask(const Matrix& viewMatrix)
 	//{
@@ -930,8 +894,6 @@ public:
 	//	glDepthMask(true);
 	//}
 
-
-	
 	//void drawDoduo(const Matrix& viewMatrix)
 	//{
 	//	// Show Wireframes. //
