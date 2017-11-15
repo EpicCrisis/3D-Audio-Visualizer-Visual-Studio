@@ -6,10 +6,23 @@
 #include <iostream>
 #include "demo_base.h"
 #include "lodepng.h"
+#include <fmod.hpp>
+#include <fmod_errors.h>
 
 #define TEXTURE_COUNT 6
 
+//must be power of 2 number
+#define SPECTRUM_SIZE 128
+
 const int RECT_VERTEX_ARRAY_SIZE = 0;
+
+void ERRCHECK(FMOD_RESULT result)
+{
+	if (result != FMOD_OK)
+	{
+		printf("FMOD ERROR! (%d) %s\n", result, FMOD_ErrorString(result));
+	}
+}
 
 class Plane
 {
@@ -65,7 +78,7 @@ public:
 	void animatePlaneWave()
 	{
 		delta += speed;
-		std::cout << "Delta = " << delta << std::endl;
+		//std::cout << "Delta = " << delta << std::endl;
 		drawPlane();
 	}
 };
@@ -166,8 +179,42 @@ private:
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
 	}
 
+	FMOD::System* m_fmodSystem;
+	FMOD::Sound* m_music;
+	FMOD::Channel* m_musicChannel;
+
+	float m_spectrumLeft[SPECTRUM_SIZE];
+	float m_spectrumRight[SPECTRUM_SIZE];
 
 public:
+
+	void InitFMOD()
+	{
+		FMOD_RESULT result;
+		unsigned int version;
+
+		result = FMOD::System_Create(&m_fmodSystem);
+
+		result = m_fmodSystem->getVersion(&version);
+		ERRCHECK(result);
+
+		if (version < FMOD_VERSION)
+		{
+			printf("FMOD Error! You are using an old version of FMOD.", version, FMOD_VERSION);
+		}
+
+		//initialize fmod system
+		result = m_fmodSystem->init(32, FMOD_INIT_NORMAL, 0);
+		ERRCHECK(result);
+
+		//load and set up music
+		result = m_fmodSystem->createStream("../media/Waterflame.mp3", FMOD_SOFTWARE, 0, &m_music);
+		ERRCHECK(result);
+
+		//play the loaded mp3 music
+		result = m_fmodSystem->playSound(FMOD_CHANNEL_FREE, m_music, false, &m_musicChannel);
+		ERRCHECK(result);
+	}
 
 	float PI = 3.142;
 
@@ -180,6 +227,8 @@ public:
 		glGenTextures(TEXTURE_COUNT, mTextureID);
 		loadPNG("../media/unity_logo.png", mTextureID[0]);
 		loadPNG("../media/angry_birds.png", mTextureID[1]);
+
+		InitFMOD();
 	}
 
 	void deinit()
@@ -758,6 +807,39 @@ public:
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 
+	void updateFmod()
+	{
+		m_fmodSystem->update();
+
+		//set spectrum for left and right stereo channel
+		m_musicChannel->getSpectrum(m_spectrumLeft, SPECTRUM_SIZE, 0, FMOD_DSP_FFT_WINDOW_RECT);
+
+		m_musicChannel->getSpectrum(m_spectrumRight, SPECTRUM_SIZE, 0, FMOD_DSP_FFT_WINDOW_RECT);
+
+		//point the first audio spectrum for both left and right channels
+		std::cout << m_spectrumLeft[0] << ", " << m_spectrumRight[0] << std::endl;
+
+		glBegin(GL_TRIANGLES);
+
+		for (int j = 1; j <= 50; j++)
+		{
+			for (int i = (SPECTRUM_SIZE / 1 / j); i <= (SPECTRUM_SIZE / j); i++)
+			{
+				float spectrumAverage = (m_spectrumLeft[i] + m_spectrumRight[i]) / 2;
+
+				glVertex3f(0.0f + j, spectrumAverage * 10, 0.0f);
+				glVertex3f(1.0f + j, spectrumAverage * 10, 0.0f);
+				glVertex3f(0.0f + j, spectrumAverage * 10, 1.0f);
+
+				glVertex3f(0.0f + j, spectrumAverage * 10, 1.0f);
+				glVertex3f(1.0f + j, spectrumAverage * 10, 0.0f);
+				glVertex3f(1.0f + j, spectrumAverage * 10, 1.0f);
+			}
+		}
+
+		glEnd();
+	}
+
 	//Matrix ovalOrbiter(const Matrix& viewMatrix, float rot1, float rot2, float amplitude, float l1, float l2)
 	//{
 	//	// Matrix Transformation //
@@ -797,7 +879,9 @@ public:
 		// Show Wireframes. //
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
 
-		plane.animatePlaneWave();
+		//plane.animatePlaneWave();
+
+		updateFmod();
 
 		//drawVertexCube(1, 3.0f);
 
