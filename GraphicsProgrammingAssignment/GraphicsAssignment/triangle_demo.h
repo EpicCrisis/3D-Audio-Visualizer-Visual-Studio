@@ -339,7 +339,7 @@ public:
 		glVertex3f(sizeX, sizeY, -sizeZ);
 
 		// Finished Drawing The Triangles
-		glEnd();										
+		glEnd();
 	}
 
 	void drawTextureCube(float size = 1.0f)
@@ -534,7 +534,7 @@ public:
 			glVertex3f(x2, offsetY + halfHeight, z2);
 		}
 		// Finished Drawing The Triangles
-		glEnd();										
+		glEnd();
 	}
 
 	void drawCone(float height, float radius, int iteration = 100, float red = 1.0f, float green = 1.0f, float blue = 1.0f)
@@ -730,8 +730,8 @@ public:
 			255, 0, 255,
 			255, 0, 0,
 			0, 255, 0,
-		}; 
-		
+		};
+
 		GLfloat texCoords[] =
 		{
 			// Front //
@@ -821,24 +821,120 @@ public:
 
 		glBegin(GL_TRIANGLES);
 
-		for (int j = 1; j <= 50; j++)
+		for (int i = 0; i < 24; i++)
 		{
-			for (int i = (SPECTRUM_SIZE / 1 / j); i <= (SPECTRUM_SIZE / j); i++)
+			float spectrumAverage = (m_spectrumLeft[i] + m_spectrumRight[i]) / 2.0f;
+			float size = 0.5f;
+			float amplify = 10.0f;
+
+			/*float red = spectrumAverage * 2.0f;
+			if (red < 0.0f)
 			{
-				float spectrumAverage = (m_spectrumLeft[i] + m_spectrumRight[i]) / 2;
-
-				glVertex3f(0.0f + j, spectrumAverage * 10, 0.0f);
-				glVertex3f(1.0f + j, spectrumAverage * 10, 0.0f);
-				glVertex3f(0.0f + j, spectrumAverage * 10, 1.0f);
-
-				glVertex3f(0.0f + j, spectrumAverage * 10, 1.0f);
-				glVertex3f(1.0f + j, spectrumAverage * 10, 0.0f);
-				glVertex3f(1.0f + j, spectrumAverage * 10, 1.0f);
+				red = 0.0f;
 			}
-		}
+			else if (red > 1.0f)
+			{
+				red = 1.0f;
+			}
+			float green = (spectrumAverage - 0.5f) * 2.0f;
+			if (green < 0.0f)
+			{
+				green = 0.0f;
+			}
+			else if (green > 1.0f)
+			{
+				green = 1.0f;
+			}
+			green = 1.0f - green;*/
 
+			float redSpectrum = (spectrumAverage * 200.0f / SPECTRUM_SIZE) * 200.0f;
+			float greenSpectrum = ((SPECTRUM_SIZE - spectrumAverage * 200.0f) / SPECTRUM_SIZE) * 200.0f;
+
+			//glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+
+			/*glVertex3f(0.0f + j, spectrumAverage * 10, 0.0f);
+			glVertex3f(1.0f + j, spectrumAverage * 10, 0.0f);
+			glVertex3f(0.0f + j, spectrumAverage * 10, 1.0f);
+
+			glVertex3f(0.0f + j, spectrumAverage * 10, 1.0f);
+			glVertex3f(1.0f + j, spectrumAverage * 10, 0.0f);
+			glVertex3f(1.0f + j, spectrumAverage * 10, 1.0f);*/
+
+			// Negative Square (back)
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glVertex3f(-size + i, spectrumAverage * amplify, -size);
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(-size + i, -size, -size);
+			glVertex3f(size + i, -size, -size);
+
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glVertex3f(-size + i, spectrumAverage * amplify, -size);
+			glVertex3f(size + i, spectrumAverage * amplify, -size);
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(size + i, -size, -size);
+
+			// Positive Square (front)
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glVertex3f(-size + i, spectrumAverage * amplify, size);
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(-size + i, -size, size);
+			glVertex3f(size + i, -size, size);
+
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glVertex3f(-size + i, spectrumAverage * amplify, size);
+			glVertex3f(size + i, spectrumAverage * amplify, size);
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(size + i, -size, size);
+
+			// Negative Square (down)
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(size + i, -size, -size);
+			glVertex3f(-size + i, -size, -size);
+			glVertex3f(-size + i, -size, size);
+
+			glVertex3f(size + i, -size, -size);
+			glVertex3f(size + i, -size, size);
+			glVertex3f(-size + i, -size, size);
+
+			// Positive Square (up)
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glVertex3f(size + i, spectrumAverage * amplify, -size);
+			glVertex3f(-size + i, spectrumAverage * amplify, -size);
+			glVertex3f(-size + i, spectrumAverage * amplify, size);
+
+			glVertex3f(size + i, spectrumAverage * amplify, -size);
+			glVertex3f(size + i, spectrumAverage * amplify, size);
+			glVertex3f(-size + i, spectrumAverage * amplify, size);
+
+			// Negative Square (left)
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(-size + i, -size, size);
+			glVertex3f(-size + i, -size, -size);
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glVertex3f(-size + i, spectrumAverage * amplify, -size);
+
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(-size + i, -size, size);
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glVertex3f(-size + i, spectrumAverage * amplify, size);
+			glVertex3f(-size + i, spectrumAverage * amplify, -size);
+
+			// Positive Square (right)
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(size + i, -size, size);
+			glVertex3f(size + i, -size, -size);
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glVertex3f(size + i, spectrumAverage * amplify, -size);
+
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(size + i, -size, size);
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glVertex3f(size + i, spectrumAverage * amplify, size);
+			glVertex3f(size + i, spectrumAverage * amplify, -size);
+		}
 		glEnd();
 	}
+
 
 	//Matrix ovalOrbiter(const Matrix& viewMatrix, float rot1, float rot2, float amplitude, float l1, float l2)
 	//{
@@ -874,7 +970,7 @@ public:
 
 		glLoadMatrixf((GLfloat*)viewMatrix.mVal);
 
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 		// Show Wireframes. //
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
