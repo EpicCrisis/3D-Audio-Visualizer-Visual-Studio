@@ -807,21 +807,11 @@ public:
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 
-	void updateFmod()
+	void drawMusicBar()
 	{
-		m_fmodSystem->update();
-
-		//set spectrum for left and right stereo channel
-		m_musicChannel->getSpectrum(m_spectrumLeft, SPECTRUM_SIZE, 0, FMOD_DSP_FFT_WINDOW_RECT);
-
-		m_musicChannel->getSpectrum(m_spectrumRight, SPECTRUM_SIZE, 0, FMOD_DSP_FFT_WINDOW_RECT);
-
-		//point the first audio spectrum for both left and right channels
-		std::cout << m_spectrumLeft[0] << ", " << m_spectrumRight[0] << std::endl;
-
 		glBegin(GL_TRIANGLES);
 
-		for (int i = 0; i < 24; i++)
+		for (int i = 0; i < 12; i++)
 		{
 			float spectrumAverage = (m_spectrumLeft[i] + m_spectrumRight[i]) / 2.0f;
 			float size = 0.5f;
@@ -830,20 +820,20 @@ public:
 			/*float red = spectrumAverage * 2.0f;
 			if (red < 0.0f)
 			{
-				red = 0.0f;
+			red = 0.0f;
 			}
 			else if (red > 1.0f)
 			{
-				red = 1.0f;
+			red = 1.0f;
 			}
 			float green = (spectrumAverage - 0.5f) * 2.0f;
 			if (green < 0.0f)
 			{
-				green = 0.0f;
+			green = 0.0f;
 			}
 			else if (green > 1.0f)
 			{
-				green = 1.0f;
+			green = 1.0f;
 			}
 			green = 1.0f - green;*/
 
@@ -935,6 +925,52 @@ public:
 		glEnd();
 	}
 
+	//Turn it into a funky music sphere!
+	void drawMusicSphere(float startU, float startV, float endU, float endV, float radius, float UResolution, float VResolution, float xFactor, float yFactor, float red = 1.0f, float green = 1.0f, float blue = 1.0f)
+	{
+		float stepU = (endU - startU) / UResolution;
+		float stepV = (endV - startV) / VResolution;
+
+		glBegin(GL_TRIANGLES);
+		glColor3f(red, green, blue);
+		for (int i = 0; i < UResolution; i++)
+		{
+			for (int j = 0; j < VResolution; j++)
+			{
+				float u = i*stepU + startU;
+				float v = j*stepV + startV;
+				float un = (i + 1 == UResolution) ? endU : (i + 1)*stepU + startU;
+				float vn = (j + 1 == VResolution) ? endV : (j + 1)*stepV + startV;
+
+				Vertex p0 = SphereFunction(u, v, radius);
+				Vertex p1 = SphereFunction(u, vn, radius);
+				Vertex p2 = SphereFunction(un, v, radius);
+				Vertex p3 = SphereFunction(un, vn, radius);
+
+				glVertex3f(p0.x*xFactor, p0.y*yFactor, p0.z);
+				glVertex3f(p2.x*xFactor, p2.y*yFactor, p2.z);
+				glVertex3f(p1.x*xFactor, p1.y*yFactor, p1.z);
+				glVertex3f(p3.x*xFactor, p3.y*yFactor, p3.z);
+				glVertex3f(p1.x*xFactor, p1.y*yFactor, p1.z);
+				glVertex3f(p2.x*xFactor, p2.y*yFactor, p2.z);
+			}
+		}
+		glEnd();
+	}
+
+	void updateFmod()
+	{
+		m_fmodSystem->update();
+
+		//set spectrum for left and right stereo channel
+		m_musicChannel->getSpectrum(m_spectrumLeft, SPECTRUM_SIZE, 0, FMOD_DSP_FFT_WINDOW_RECT);
+
+		m_musicChannel->getSpectrum(m_spectrumRight, SPECTRUM_SIZE, 0, FMOD_DSP_FFT_WINDOW_RECT);
+
+		//point the first audio spectrum for both left and right channels
+		std::cout << m_spectrumLeft[0] << ", " << m_spectrumRight[0] << std::endl;
+	}
+
 
 	//Matrix ovalOrbiter(const Matrix& viewMatrix, float rot1, float rot2, float amplitude, float l1, float l2)
 	//{
@@ -978,6 +1014,58 @@ public:
 		//plane.animatePlaneWave();
 
 		updateFmod();
+
+		Matrix theTotalBarMatrix;
+		float rotateValue = 0.0f;
+		float moveValue = 0.0f;
+
+		for (int j = 0; j < 4; j++)
+		{
+			Matrix rotationBar2;
+			Matrix translationBar2;
+			if (j == 0)
+			{
+				translationBar2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, -12.5f));
+				rotationBar2 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 1.0f, 0.0f));
+			}
+			else if (j == 1)
+			{
+				translationBar2 = Matrix::makeTranslationMatrix(Vector(12.5f, 0.0f, 0.0f));
+				rotationBar2 = Matrix::makeRotateMatrix(90.0f, Vector(0.0f, 1.0f, 0.0f));
+			}
+			else if (j == 2)
+			{
+				translationBar2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 12.5f));
+				rotationBar2 = Matrix::makeRotateMatrix(180.0f, Vector(0.0f, 1.0f, 0.0f));
+			}
+			else if (j == 3)
+			{
+				translationBar2 = Matrix::makeTranslationMatrix(Vector(-12.5f, 0.0f, 0.0f));
+				rotationBar2 = Matrix::makeRotateMatrix(270.0f, Vector(0.0f, 1.0f, 0.0f));
+			}
+
+			for (int i = 0; i < 2; i++) {
+				Matrix translationBar1;
+				Matrix rotationBar1;
+				if (i == 0)
+				{
+					translationBar1 = Matrix::makeTranslationMatrix(Vector(0.5f, 0.0f, 0.0f));
+					rotationBar1 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 1.0f, 0.0f));
+				}
+				else if (i == 1)
+				{
+					translationBar1 = Matrix::makeTranslationMatrix(Vector(-0.5f, 0.0f, 0.0f));
+					rotationBar1 = Matrix::makeRotateMatrix(180.0f, Vector(0.0f, 1.0f, 0.0f));
+				}
+
+				theTotalBarMatrix = translationBar2 * rotationBar2 * translationBar1 * rotationBar1;
+
+				Matrix barMatrix1 = viewMatrix * theTotalBarMatrix;
+				glLoadMatrixf((GLfloat*)barMatrix1.mVal);
+				drawMusicBar();
+			}
+		}
+		
 
 		//drawVertexCube(1, 3.0f);
 
