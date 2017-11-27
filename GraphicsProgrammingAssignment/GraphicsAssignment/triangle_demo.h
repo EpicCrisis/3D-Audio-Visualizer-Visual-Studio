@@ -185,6 +185,8 @@ private:
 	float m_spectrumLeft[SPECTRUM_SIZE];
 	float m_spectrumRight[SPECTRUM_SIZE];
 
+	float spectrumAverage;
+
 public:
 
 	void InitFMOD()
@@ -207,7 +209,7 @@ public:
 		ERRCHECK(result);
 
 		//load and set up music
-		result = m_fmodSystem->createStream("../media/Waterflame.mp3", FMOD_SOFTWARE, 0, &m_music);
+		result = m_fmodSystem->createStream("../media/Rise.mp3", FMOD_SOFTWARE, 0, &m_music);
 		ERRCHECK(result);
 
 		//play the loaded mp3 music
@@ -807,15 +809,13 @@ public:
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 
-	void drawMusicBar()
+	void drawMusicBar(float size = 0.5f, float amplify = 10.0f, int length = 12)
 	{
 		glBegin(GL_TRIANGLES);
 
-		for (int i = 0; i < 12; i++)
+		for (int i = 0; i < length; i++)
 		{
-			float spectrumAverage = (m_spectrumLeft[i] + m_spectrumRight[i]) / 2.0f;
-			float size = 0.5f;
-			float amplify = 10.0f;
+			spectrumAverage = (m_spectrumLeft[i] + m_spectrumRight[i]) / 2.0f;
 
 			/*float red = spectrumAverage * 2.0f;
 			if (red < 0.0f)
@@ -837,8 +837,8 @@ public:
 			}
 			green = 1.0f - green;*/
 
-			float redSpectrum = (spectrumAverage * 200.0f / SPECTRUM_SIZE) * 200.0f;
-			float greenSpectrum = ((SPECTRUM_SIZE - spectrumAverage * 200.0f) / SPECTRUM_SIZE) * 200.0f;
+			float redSpectrum = (spectrumAverage * 150.0f / SPECTRUM_SIZE) * 1000.0f;
+			float greenSpectrum = ((SPECTRUM_SIZE - spectrumAverage * 150.0f) / SPECTRUM_SIZE) * 1000.0f;
 
 			//glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
 			//
@@ -973,6 +973,14 @@ public:
 
 	Plane plane = Plane(0.05f, 0.2f, 3.0f, 10.0f, 10);
 
+	float activeRotateValue1 = 0.0f;
+	float activeRotateValue2 = 0.0f;
+	float moveValue = 0.0f;
+
+	float distValue = 0.0f;
+	float rotateValue = 0.0f;
+	float sizeValue = 0.0f;
+
 	void draw(const Matrix& viewMatrix)
 	{
 		drawAxis(viewMatrix);
@@ -982,63 +990,158 @@ public:
 		//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 		// Show Wireframes //
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		//plane.animatePlaneWave();
 
 		updateFmod();
 
+		// ----- The Visualizer Here ----- //
+
 		Matrix theTotalBarMatrix;
-		float rotateValue = 0.0f;
-		float moveValue = 0.0f;
+		Matrix theTotalSphereMatrix;
 
-		for (int j = 0; j < 4; j++)
+		activeRotateValue1 += 1.0f * (spectrumAverage * 10.0f);
+
+		// The Central Sphere
+
+		Matrix translationSphere1;
+		Matrix rotationSphere1;
+
+		translationSphere1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
+		rotationSphere1 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
+
+		theTotalSphereMatrix = rotationSphere1 * translationSphere1;
+
+		Matrix sphereMatrix1 = viewMatrix * theTotalSphereMatrix;
+		glLoadMatrixf((GLfloat*)sphereMatrix1.mVal);
+		drawMusicSphere(0.0f, 360.0f, 360.0f, 180.0f, 2.5f + (spectrumAverage * 10.0f), 20.0f, 20.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+		// Duplicate bar visualizer in different distances //
+
+		for (int k = 0; k < 5; k++) 
 		{
-			Matrix rotationBar2;
-			Matrix translationBar2;
-			if (j == 0)
+			Matrix rotationBar4;
+			Matrix translationBar3;
+
+			if (k == 0)
 			{
-				translationBar2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, -12.5f));
-				rotationBar2 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 1.0f, 0.0f));
+				sizeValue = 6;
+				distValue = 6.5f;
+				rotateValue = 0.0f;
+
+				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
 			}
-			else if (j == 1)
+			else if (k == 1)
 			{
-				translationBar2 = Matrix::makeTranslationMatrix(Vector(12.5f, 0.0f, 0.0f));
-				rotationBar2 = Matrix::makeRotateMatrix(90.0f, Vector(0.0f, 1.0f, 0.0f));
+				sizeValue = 5;
+				distValue = 12.5f;
+				rotateValue = 5.0f;
+
+				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
 			}
-			else if (j == 2)
+			else if (k == 2)
 			{
-				translationBar2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 12.5f));
-				rotationBar2 = Matrix::makeRotateMatrix(180.0f, Vector(0.0f, 1.0f, 0.0f));
+				sizeValue = 4;
+				distValue = 18.5f;
+				rotateValue = 10.0f;
+
+				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
 			}
-			else if (j == 3)
+			else if (k == 3)
 			{
-				translationBar2 = Matrix::makeTranslationMatrix(Vector(-12.5f, 0.0f, 0.0f));
-				rotationBar2 = Matrix::makeRotateMatrix(270.0f, Vector(0.0f, 1.0f, 0.0f));
+				sizeValue = 3;
+				distValue = 24.5f;
+				rotateValue = 15.0f;
+
+				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
+			}
+			else if (k == 4)
+			{
+				sizeValue = 2;
+				distValue = 30.5f;
+				rotateValue = 20.0f;
+
+				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
 			}
 
-			for (int i = 0; i < 2; i++) {
-				Matrix translationBar1;
-				Matrix rotationBar1;
-				if (i == 0)
+			// Make the bar visualizer into a square //
+
+			for (int j = 0; j < 8; j++)
+			{
+				Matrix rotationBar3;
+				Matrix translationBar2;
+
+				if (j == 0)
 				{
-					translationBar1 = Matrix::makeTranslationMatrix(Vector(0.5f, 0.0f, 0.0f));
-					rotationBar1 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 1.0f, 0.0f));
+					translationBar2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, -distValue));
+					rotationBar3 = Matrix::makeRotateMatrix(0.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
 				}
-				else if (i == 1)
+				else if (j == 1)
 				{
-					translationBar1 = Matrix::makeTranslationMatrix(Vector(-0.5f, 0.0f, 0.0f));
-					rotationBar1 = Matrix::makeRotateMatrix(180.0f, Vector(0.0f, 1.0f, 0.0f));
+					translationBar2 = Matrix::makeTranslationMatrix(Vector(distValue, 0.0f, -distValue));
+					rotationBar3 = Matrix::makeRotateMatrix(45.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+				}
+				else if (j == 2)
+				{
+					translationBar2 = Matrix::makeTranslationMatrix(Vector(distValue, 0.0f, 0.0f));
+					rotationBar3 = Matrix::makeRotateMatrix(90.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+				}
+				else if (j == 3)
+				{
+					translationBar2 = Matrix::makeTranslationMatrix(Vector(distValue, 0.0f, distValue));
+					rotationBar3 = Matrix::makeRotateMatrix(135.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+				}
+				else if (j == 4)
+				{
+					translationBar2 = Matrix::makeTranslationMatrix(Vector(0.0, 0.0f, distValue));
+					rotationBar3 = Matrix::makeRotateMatrix(180.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+				}
+				else if (j == 5)
+				{
+					translationBar2 = Matrix::makeTranslationMatrix(Vector(-distValue, 0.0f, distValue));
+					rotationBar3 = Matrix::makeRotateMatrix(225.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+				}
+				else if (j == 6)
+				{
+					translationBar2 = Matrix::makeTranslationMatrix(Vector(-distValue, 0.0f, 0.0f));
+					rotationBar3 = Matrix::makeRotateMatrix(270.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+				}
+				else if (j == 7)
+				{
+					translationBar2 = Matrix::makeTranslationMatrix(Vector(-distValue, 0.0f, -distValue));
+					rotationBar3 = Matrix::makeRotateMatrix(315.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
 				}
 
-				theTotalBarMatrix = translationBar2 * rotationBar2 * translationBar1 * rotationBar1;
+				// Make the bar visualizer symmetrical //
 
-				Matrix barMatrix1 = viewMatrix * theTotalBarMatrix;
-				glLoadMatrixf((GLfloat*)barMatrix1.mVal);
-				drawMusicBar();
+				for (int i = 0; i < 2; i++) {
+					Matrix translationBar1;
+					Matrix rotationBar1;
+					Matrix rotationBar2;
+
+					rotationBar2 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
+
+					if (i == 0)
+					{
+						translationBar1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
+						rotationBar1 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 1.0f, 0.0f));
+					}
+					else if (i == 1)
+					{
+						translationBar1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
+						rotationBar1 = Matrix::makeRotateMatrix(180.0f, Vector(0.0f, 1.0f, 0.0f));
+					}
+
+					theTotalBarMatrix = rotationBar4 * translationBar2 * rotationBar3 * rotationBar2 * translationBar1 * rotationBar1;
+
+					Matrix barMatrix1 = viewMatrix * theTotalBarMatrix;
+					glLoadMatrixf((GLfloat*)barMatrix1.mVal);
+					drawMusicBar(0.5f, 10.0f, sizeValue);
+				}
 			}
 		}
-
+	
 		// Draw Functions //
 		
 		//drawVertexCube(1, 3.0f);
