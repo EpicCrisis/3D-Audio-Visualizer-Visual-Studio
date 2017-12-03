@@ -850,77 +850,79 @@ public:
 			//glVertex3f(1.0f + j, spectrumAverage * 10, 0.0f);
 			//glVertex3f(1.0f + j, spectrumAverage * 10, 1.0f);
 
+			//  - (i * (size * 2) / 2)
+
 			// Negative Square (back)
 			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
-			glVertex3f(-size + i, spectrumAverage * amplify, -size);
+			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex3f(-size + i, -size, -size);
-			glVertex3f(size + i, -size, -size);
+			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), -size);
+			glVertex3f(size + i * (size * 2), -size + cosf(i * size), -size);
 
 			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
-			glVertex3f(-size + i, spectrumAverage * amplify, -size);
-			glVertex3f(size + i, spectrumAverage * amplify, -size);
+			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
+			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex3f(size + i, -size, -size);
+			glVertex3f(size + i * (size * 2), -size + cosf(i * size), -size);
 
 			// Positive Square (front)
 			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
-			glVertex3f(-size + i, spectrumAverage * amplify, size);
+			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex3f(-size + i, -size, size);
-			glVertex3f(size + i, -size, size);
+			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), size);
+			glVertex3f(size + i * (size * 2), -size + cosf(i * size), size);
 
 			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
-			glVertex3f(-size + i, spectrumAverage * amplify, size);
-			glVertex3f(size + i, spectrumAverage * amplify, size);
+			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
+			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex3f(size + i, -size, size);
+			glVertex3f(size + i * (size * 2), -size + cosf(i * size), size);
 
 			// Negative Square (down)
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex3f(size + i, -size, -size);
-			glVertex3f(-size + i, -size, -size);
-			glVertex3f(-size + i, -size, size);
+			glVertex3f(size + i * (size * 2), -size + cosf(i * size), -size);
+			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), -size);
+			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), size);
 
-			glVertex3f(size + i, -size, -size);
-			glVertex3f(size + i, -size, size);
-			glVertex3f(-size + i, -size, size);
+			glVertex3f(size + i * (size * 2), -size + cosf(i * size), -size);
+			glVertex3f(size + i * (size * 2), -size + cosf(i * size), size);
+			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), size);
 
 			// Positive Square (up)
 			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
-			glVertex3f(size + i, spectrumAverage * amplify, -size);
-			glVertex3f(-size + i, spectrumAverage * amplify, -size);
-			glVertex3f(-size + i, spectrumAverage * amplify, size);
+			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
+			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
+			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
 
-			glVertex3f(size + i, spectrumAverage * amplify, -size);
-			glVertex3f(size + i, spectrumAverage * amplify, size);
-			glVertex3f(-size + i, spectrumAverage * amplify, size);
+			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
+			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
+			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
 
 			// Negative Square (left)
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex3f(-size + i, -size, size);
-			glVertex3f(-size + i, -size, -size);
+			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), size);
+			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), -size);
 			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
-			glVertex3f(-size + i, spectrumAverage * amplify, -size);
+			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex3f(-size + i, -size, size);
+			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), size);
 			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
-			glVertex3f(-size + i, spectrumAverage * amplify, size);
-			glVertex3f(-size + i, spectrumAverage * amplify, -size);
+			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
+			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 
 			// Positive Square (right)
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex3f(size + i, -size, size);
-			glVertex3f(size + i, -size, -size);
+			glVertex3f(size + i * (size * 2), -size + cosf(i * size), size);
+			glVertex3f(size + i * (size * 2), -size + cosf(i * size), -size);
 			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
-			glVertex3f(size + i, spectrumAverage * amplify, -size);
+			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex3f(size + i, -size, size);
+			glVertex3f(size + i * (size * 2), -size + cosf(i * size), size);
 			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
-			glVertex3f(size + i, spectrumAverage * amplify, size);
-			glVertex3f(size + i, spectrumAverage * amplify, -size);
+			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
+			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 		}
 		glEnd();
 	}
@@ -965,6 +967,39 @@ public:
 				glVertex3f(p1.x*xFactor, p1.y*yFactor, p1.z);
 
 				glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+				glVertex3f(p2.x*xFactor, p2.y*yFactor, p2.z);
+			}
+		}
+		glEnd();
+	}
+
+	//Turn it into a funky music sphere that is uniformly affected by spectrum!
+	void drawMusicSphereRegular(float startU, float startV, float endU, float endV, float radius, float UResolution, float VResolution, float xFactor, float yFactor, float amplify)
+	{
+		float stepU = (endU - startU) / UResolution;
+		float stepV = (endV - startV) / VResolution;
+
+		glBegin(GL_TRIANGLES);
+		for (int i = 0; i < UResolution; i++)
+		{
+			for (int j = 0; j < VResolution; j++)
+			{
+				float u = i*stepU + startU;
+				float v = j*stepV + startV;
+				float un = (i + 1 == UResolution) ? endU : (i + 1)*stepU + startU;
+				float vn = (j + 1 == VResolution) ? endV : (j + 1)*stepV + startV;
+
+				Vertex p0 = SphereFunction(u, v, radius + (spectrumAverage * amplify));
+				Vertex p1 = SphereFunction(u, vn, radius + (spectrumAverage * amplify));
+				Vertex p2 = SphereFunction(un, v, radius + (spectrumAverage * amplify));
+				Vertex p3 = SphereFunction(un, vn, radius + (spectrumAverage * amplify));
+
+				glColor4f(1.0f, 1.0f, 1.0f, spectrumAverage * 10.0f);
+				glVertex3f(p0.x*xFactor, p0.y*yFactor, p0.z);
+				glVertex3f(p2.x*xFactor, p2.y*yFactor, p2.z);
+				glVertex3f(p1.x*xFactor, p1.y*yFactor, p1.z);
+				glVertex3f(p3.x*xFactor, p3.y*yFactor, p3.z);
+				glVertex3f(p1.x*xFactor, p1.y*yFactor, p1.z);
 				glVertex3f(p2.x*xFactor, p2.y*yFactor, p2.z);
 			}
 		}
@@ -1028,7 +1063,7 @@ public:
 
 		Matrix sphereMatrix1 = viewMatrix * theTotalSphereMatrix;
 		glLoadMatrixf((GLfloat*)sphereMatrix1.mVal);
-		drawMusicSphere(0.0f, 360.0f, 360.0f, 180.0f, 2.5f, 10.0f, 10.0f, 1.0f, 1.0f, 10.0f);
+		drawMusicSphere(0.0f, 360.0f, 360.0f, 180.0f, 2.5f, 30.0f, 30.0f, 1.0f, 1.0f, 8.0f);
 
 		// Duplicate bar visualizer in different distances //
 
@@ -1039,41 +1074,41 @@ public:
 
 			if (k == 0)
 			{
-				sizeValue = 6;
-				distValue = 6.5f;
-				rotateValue = 0.0f;
+				sizeValue = 6 + spectrumAverage * 10.0f;
+				distValue = 6.5f + spectrumAverage * 10.0f;
+				rotateValue = spectrumAverage * 25.0f;
 
 				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
 			}
 			else if (k == 1)
 			{
-				sizeValue = 5;
-				distValue = 12.5f;
-				rotateValue = 5.0f;
+				sizeValue = 5 + spectrumAverage * 10.0f;
+				distValue = 12.5f + spectrumAverage * 10.0f;
+				rotateValue = spectrumAverage * 20.0f;
 
 				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
 			}
 			else if (k == 2)
 			{
-				sizeValue = 4;
-				distValue = 18.5f;
-				rotateValue = 10.0f;
+				sizeValue = 4 + spectrumAverage * 10.0f;
+				distValue = 17.5f + spectrumAverage * 10.0f;
+				rotateValue = spectrumAverage * 15.0f;
 
 				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
 			}
 			else if (k == 3)
 			{
-				sizeValue = 3;
-				distValue = 24.5f;
-				rotateValue = 15.0f;
+				sizeValue = 3 + spectrumAverage * 10.0f;
+				distValue = 22.5f + spectrumAverage * 10.0f;
+				rotateValue = spectrumAverage * 10.0f;
 
 				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
 			}
 			else if (k == 4)
 			{
-				sizeValue = 2;
-				distValue = 30.5f;
-				rotateValue = 20.0f;
+				sizeValue = 2 + spectrumAverage * 10.0f;
+				distValue = 26.5f + spectrumAverage * 10.0f;
+				rotateValue = spectrumAverage * 5.0f;
 
 				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
 			}
@@ -1150,19 +1185,19 @@ public:
 
 					Matrix barMatrix1 = viewMatrix * theTotalBarMatrix;
 					glLoadMatrixf((GLfloat*)barMatrix1.mVal);
-					drawMusicBar(0.05f, 10.0f, sizeValue); 
+					drawMusicBar(0.5f, 8.0f, sizeValue);
 				}
 				for (int i = 0; i < 2; i++)
 				{
 					Matrix rotationSphere2;
 
-					rotationSphere2 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
+					rotationSphere2 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 1.0f));
 
 					theTotalBarMatrix = rotationSphere2 * theTotalBarMatrix;
 
 					Matrix sphereMatrix2 = viewMatrix * theTotalBarMatrix;
 					glLoadMatrixf((GLfloat*)sphereMatrix2.mVal);
-					drawMusicSphere(0.0f, 360.0f, 360.0f, 180.0f, 0.05f, 10.0f, 10.0f, 1.0f, 1.0f, 1.0f);
+					drawMusicSphereRegular(0.0f, 360.0f, 360.0f, 180.0f, 0.05f, 10.0f, 10.0f, 1.0f, 1.0f, 1.0f);
 				}
 			}
 		}
