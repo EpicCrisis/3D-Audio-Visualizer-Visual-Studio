@@ -837,8 +837,8 @@ public:
 			}
 			green = 1.0f - green;*/
 
-			float redSpectrum = (spectrumAverage * 200.0f / SPECTRUM_SIZE) * 200.0f;
-			float greenSpectrum = ((SPECTRUM_SIZE - spectrumAverage * 200.0f) / SPECTRUM_SIZE) * 200.0f;
+			float redSpectrum = spectrumAverage;
+			float greenSpectrum = 1.0f - spectrumAverage;
 
 			//glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
 			//
@@ -853,33 +853,33 @@ public:
 			//  - (i * (size * 2) / 2)
 
 			// Negative Square (back)
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), -size);
 			glVertex3f(size + i * (size * 2), -size + cosf(i * size), -size);
 
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(size + i * (size * 2), -size + cosf(i * size), -size);
 
 			// Positive Square (front)
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), size);
 			glVertex3f(size + i * (size * 2), -size + cosf(i * size), size);
 
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
 			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(size + i * (size * 2), -size + cosf(i * size), size);
 
 			// Negative Square (down)
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(size + i * (size * 2), -size + cosf(i * size), -size);
 			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), -size);
 			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), size);
@@ -889,7 +889,7 @@ public:
 			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), size);
 
 			// Positive Square (up)
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
@@ -899,28 +899,28 @@ public:
 			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
 
 			// Negative Square (left)
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), size);
 			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), -size);
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(-size + i * (size * 2), -size + cosf(i * size), size);
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
 			glVertex3f(-size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 
 			// Positive Square (right)
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(size + i * (size * 2), -size + cosf(i * size), size);
 			glVertex3f(size + i * (size * 2), -size + cosf(i * size), -size);
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(size + i * (size * 2), -size + cosf(i * size), size);
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), size);
 			glVertex3f(size + i * (size * 2), spectrumAverage * amplify + cosf(i * size), -size);
 		}
@@ -933,8 +933,8 @@ public:
 		float stepU = (endU - startU) / UResolution;
 		float stepV = (endV - startV) / VResolution;
 
-		float redSpectrum = (spectrumAverage * 200.0f / SPECTRUM_SIZE) * 200.0f;
-		float greenSpectrum = ((SPECTRUM_SIZE - spectrumAverage * 200.0f) / SPECTRUM_SIZE) * 200.0f;
+		float redSpectrum = spectrumAverage;
+		float greenSpectrum = 1.0f - spectrumAverage;
 
 		glBegin(GL_TRIANGLES);
 		for (int i = 0; i < UResolution; i++)
@@ -948,25 +948,25 @@ public:
 
 				Vertex p0 = SphereFunction(u, v, radius + (spectrumAverage * amplify));
 				Vertex p1 = SphereFunction(u, vn, radius + (spectrumAverage * amplify));
-				Vertex p2 = SphereFunction(un, v, radius);
-				Vertex p3 = SphereFunction(un, vn, radius);
+				Vertex p2 = SphereFunction(un, v, radius + (spectrumAverage * amplify));
+				Vertex p3 = SphereFunction(un, vn, radius + (spectrumAverage * amplify));
 
-				glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+				glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 				glVertex3f(p0.x*xFactor, p0.y*yFactor, p0.z);
 
-				glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+				glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 				glVertex3f(p2.x*xFactor, p2.y*yFactor, p2.z);
 
-				glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+				glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 				glVertex3f(p1.x*xFactor, p1.y*yFactor, p1.z);
 
-				glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+				glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 				glVertex3f(p3.x*xFactor, p3.y*yFactor, p3.z);
 
-				glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+				glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 				glVertex3f(p1.x*xFactor, p1.y*yFactor, p1.z);
 
-				glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+				glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 				glVertex3f(p2.x*xFactor, p2.y*yFactor, p2.z);
 			}
 		}
@@ -1006,6 +1006,82 @@ public:
 		glEnd();
 	}
 
+	void drawMusicCylinder(float height, float radius, int iteration = 10) //Change iteration to steps
+	{
+		//Offset
+		float offsetX = 0.0f;
+		float offsetY = 0.0f;
+		float offsetZ = 0.0f;
+		float halfHeight = height / 2.0f;
+
+		float redSpectrum = spectrumAverage;
+		float greenSpectrum = 1.0f - spectrumAverage;
+
+		// Drawing Using Triangles
+		glBegin(GL_TRIANGLES);
+
+		float t = 360.0f / iteration;
+
+		for (int i = 0; i < iteration; i++)
+		{
+			float x1 = radius * cos((i * t) * PI / 180.0);
+			float z1 = radius * sin((i * t) * PI / 180.0);
+
+			float x2 = radius * cos(((i + 1) * t) * PI / 180.0);
+			float z2 = radius * sin(((i + 1) * t) * PI / 180.0);
+
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			// ---- Upper Circle ----
+			//glColor3f(1.0f, (i % 2 == 0 ? 0.5f : 1.0f), 0.5f);
+			//Center of the circle
+			glVertex3f(offsetX, offsetY + halfHeight, offsetZ);
+
+			//First point
+			glVertex3f(x1, offsetY + halfHeight, z1);
+
+			//Second point
+			glVertex3f(x2, offsetY + halfHeight, z2);
+
+			glColor4f(greenSpectrum, redSpectrum, 0.0f, 1.0f);
+			// ---- Lower Circle ----
+			//glColor3f(1.0f, (i % 2 == 0 ? 0.5f : 1.0f), 0.5f);
+			//Center of the circle
+			glVertex3f(offsetX, offsetY - halfHeight, offsetZ);
+
+			//First point
+			glVertex3f(x1, offsetY - halfHeight, z1);
+
+			//Second point
+			glVertex3f(x2, offsetY - halfHeight, z2);
+
+			glColor4f(greenSpectrum, redSpectrum, 0.0f, 1.0f);
+			// ---- Upper Triangle ----
+			//glColor3f(0.5f, 1.0f, 0.5f);
+			//First point
+			glVertex3f(x1, offsetY + halfHeight, z1);
+
+			//Second point
+			glVertex3f(x2, offsetY + halfHeight, z2);
+
+			//Third point
+			glVertex3f(x1, offsetY - halfHeight, z1);
+
+			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
+			// ---- Lower Triangle ----
+			//glColor3f(0.5f, 0.5f, 1.0f);
+			//First point
+			glVertex3f(x1, offsetY - halfHeight, z1);
+
+			//Second point
+			glVertex3f(x2, offsetY - halfHeight, z2);
+
+			//Third point
+			glVertex3f(x2, offsetY + halfHeight, z2);
+		}
+		// Finished Drawing The Triangles
+		glEnd();
+	}
+
 	void updateFmod()
 	{
 		m_fmodSystem->update();
@@ -1025,9 +1101,11 @@ public:
 	float activeRotateValue2 = 0.0f;
 	float moveValue = 0.0f;
 
-	float distValue = 0.0f;
-	float rotateValue = 0.0f;
-	float sizeValue = 0.0f;
+	float distValue1 = 0.0f;
+	float rotateValue1 = 0.0f;
+	float sizeValue1 = 0.0f;
+
+	float cylinderBaseAngle = 0.0f;
 
 	void draw(const Matrix& viewMatrix)
 	{
@@ -1049,7 +1127,7 @@ public:
 		Matrix theTotalBarMatrix;
 		Matrix theTotalSphereMatrix;
 
-		activeRotateValue1 += 1.0f * (spectrumAverage * 10.0f);
+		activeRotateValue1 += spectrumAverage * 10.0f;
 
 		// The Central Sphere
 
@@ -1063,145 +1141,263 @@ public:
 
 		Matrix sphereMatrix1 = viewMatrix * theTotalSphereMatrix;
 		glLoadMatrixf((GLfloat*)sphereMatrix1.mVal);
-		drawMusicSphere(0.0f, 360.0f, 360.0f, 180.0f, 2.5f, 30.0f, 30.0f, 1.0f, 1.0f, 8.0f);
+		drawMusicSphere(0.0f, 360.0f, 360.0f, 180.0f, 2.0f, 30.0f, 30.0f, 1.0f, 1.0f, 8.0f);
+
+		// Old code to music bar //
 
 		// Duplicate bar visualizer in different distances //
-
-		for (int k = 0; k < 5; k++) 
+		//
+		//for (int k = 0; k < 5; k++) 
+		//{
+		//	Matrix translationBar3;
+		//	Matrix rotationBar4;
+		//
+		//	if (k == 0)
+		//	{
+		//		sizeValue = 6 + spectrumAverage * 2.0f;
+		//		distValue = 6.5f + spectrumAverage * 10.0f;
+		//		rotateValue = spectrumAverage * 25.0f;
+		//
+		//		rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
+		//	}
+		//	else if (k == 1)
+		//	{
+		//		sizeValue = 5 + spectrumAverage * 4.0f;
+		//		distValue = 12.5f + spectrumAverage * 8.0f;
+		//		rotateValue = spectrumAverage * 20.0f;
+		//
+		//		rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
+		//	}
+		//	else if (k == 2)
+		//	{
+		//		sizeValue = 4 + spectrumAverage * 6.0f;
+		//		distValue = 17.5f + spectrumAverage * 6.0f;
+		//		rotateValue = spectrumAverage * 15.0f;
+		//
+		//		rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
+		//	}
+		//	else if (k == 3)
+		//	{
+		//		sizeValue = 3 + spectrumAverage * 8.0f;
+		//		distValue = 22.5f + spectrumAverage * 4.0f;
+		//		rotateValue = spectrumAverage * 10.0f;
+		//
+		//		rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
+		//	}
+		//	else if (k == 4)
+		//	{
+		//		sizeValue = 2 + spectrumAverage * 10.0f;
+		//		distValue = 26.5f + spectrumAverage * 2.0f;
+		//		rotateValue = spectrumAverage * 5.0f;
+		//
+		//		rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
+		//	}
+		//
+		//	// Make the bar visualizer into a square //
+		//
+		//	for (int j = 0; j < 8; j++)
+		//	{
+		//		Matrix rotationBar3;
+		//		Matrix translationBar2;
+		//
+		//		if (j == 0)
+		//		{
+		//			translationBar2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, -distValue));
+		//			rotationBar3 = Matrix::makeRotateMatrix(0.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+		//		}
+		//		else if (j == 1)
+		//		{
+		//			translationBar2 = Matrix::makeTranslationMatrix(Vector(distValue, 0.0f, -distValue));
+		//			rotationBar3 = Matrix::makeRotateMatrix(45.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+		//		}
+		//		else if (j == 2)
+		//		{
+		//			translationBar2 = Matrix::makeTranslationMatrix(Vector(distValue, 0.0f, 0.0f));
+		//			rotationBar3 = Matrix::makeRotateMatrix(90.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+		//		}
+		//		else if (j == 3)
+		//		{
+		//			translationBar2 = Matrix::makeTranslationMatrix(Vector(distValue, 0.0f, distValue));
+		//			rotationBar3 = Matrix::makeRotateMatrix(135.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+		//		}
+		//		else if (j == 4)
+		//		{
+		//			translationBar2 = Matrix::makeTranslationMatrix(Vector(0.0, 0.0f, distValue));
+		//			rotationBar3 = Matrix::makeRotateMatrix(180.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+		//		}
+		//		else if (j == 5)
+		//		{
+		//			translationBar2 = Matrix::makeTranslationMatrix(Vector(-distValue, 0.0f, distValue));
+		//			rotationBar3 = Matrix::makeRotateMatrix(225.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+		//		}
+		//		else if (j == 6)
+		//		{
+		//			translationBar2 = Matrix::makeTranslationMatrix(Vector(-distValue, 0.0f, 0.0f));
+		//			rotationBar3 = Matrix::makeRotateMatrix(270.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+		//		}
+		//		else if (j == 7)
+		//		{
+		//			translationBar2 = Matrix::makeTranslationMatrix(Vector(-distValue, 0.0f, -distValue));
+		//			rotationBar3 = Matrix::makeRotateMatrix(315.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
+		//		}
+		//
+		//		// Make the bar visualizer symmetrical //
+		//
+		//		for (int i = 0; i < 2; i++) {
+		//			Matrix translationBar1;
+		//			Matrix rotationBar1;
+		//			Matrix rotationBar2;
+		//
+		//			rotationBar2 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
+		//
+		//			if (i == 0)
+		//			{
+		//				translationBar1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
+		//				rotationBar1 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 1.0f, 0.0f));
+		//			}
+		//			else if (i == 1)
+		//			{
+		//				translationBar1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
+		//				rotationBar1 = Matrix::makeRotateMatrix(180.0f, Vector(0.0f, 1.0f, 0.0f));
+		//			}
+		//
+		//			theTotalBarMatrix = rotationBar4 * translationBar2 * rotationBar3 * rotationBar2 * translationBar1 * rotationBar1;
+		//
+		//			Matrix barMatrix1 = viewMatrix * theTotalBarMatrix;
+		//			glLoadMatrixf((GLfloat*)barMatrix1.mVal);
+		//			drawMusicBar(0.5f, 10.0f, sizeValue);
+		//		}
+		//		for (int i = 0; i < 2; i++)
+		//		{
+		//			Matrix rotationSphere2;
+		//
+		//			rotationSphere2 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 1.0f));
+		//
+		//			theTotalBarMatrix = rotationSphere2 * theTotalBarMatrix;
+		//
+		//			Matrix sphereMatrix2 = viewMatrix * theTotalBarMatrix;
+		//			glLoadMatrixf((GLfloat*)sphereMatrix2.mVal);
+		//			drawMusicSphereRegular(0.0f, 360.0f, 360.0f, 180.0f, 0.05f, 10.0f, 10.0f, 1.0f, 1.0f, 1.0f);
+		//		}
+		//	}
+		//}
+		
+		/*for (int i = 0; i < 10; i++)
 		{
-			Matrix translationBar3;
+			float radius = 5.0f;
+			float t = 360.0f / i;
+
+			Matrix translationCylinder1;
+
+			translationCylinder1 = Matrix::makeTranslationMatrix(Vector(radius * cos((i * t) * PI / 180.0), 0.0f, radius * sin((i * t) * PI / 180.0)));
+
+			Matrix cylinderMatrix1 = viewMatrix * translationCylinder1;
+			glLoadMatrixf((GLfloat*)cylinderMatrix1.mVal);
+			drawMusicCylinder(3.0f + spectrumAverage * 10.0f, 1.0f, 10);
+		}	*/
+		
+		// New code to draw music bar //
+
+		float offsetAngle1 = 90.0f;
+		int musicBarAmount1 = 4;
+		int musicBarLayer1 = 6;
+
+		float baseSize1 = 6.0f;
+		float baseDistance1 = 6.5f;
+		float baseRotationAmplify1 = 25.0f;
+		float baseAmplify1 = 8.0f;
+		float distanceModifier1 = 6.5f;
+		
+		for (int k = 0; k < musicBarLayer1; k++)
+		{
+			distValue1 = baseDistance1 + spectrumAverage * baseAmplify1;
+			sizeValue1 = baseSize1 + spectrumAverage * baseAmplify1;
+			rotateValue1 = spectrumAverage * baseRotationAmplify1;
+
+			baseSize1 = baseSize1 - 1.0f;
+			baseDistance1 = baseDistance1 + distanceModifier1;
+			baseRotationAmplify1 = baseRotationAmplify1 - 5.0f;
+			baseAmplify1 = baseAmplify1 - 2.0f;
+			distanceModifier1 = distanceModifier1 - 1.0f;
+
 			Matrix rotationBar4;
+			Matrix rotationBar5;
 
-			if (k == 0)
+			rotationBar4 = Matrix::makeRotateMatrix(rotateValue1, Vector(0.0f, 1.0f, 0.0f));
+
+			if (k % 2 == 0)
 			{
-				sizeValue = 6 + spectrumAverage * 10.0f;
-				distValue = 6.5f + spectrumAverage * 10.0f;
-				rotateValue = spectrumAverage * 25.0f;
-
-				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
+				rotationBar5 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
 			}
-			else if (k == 1)
+			else if (k % 1 == 0)
 			{
-				sizeValue = 5 + spectrumAverage * 10.0f;
-				distValue = 12.5f + spectrumAverage * 10.0f;
-				rotateValue = spectrumAverage * 20.0f;
-
-				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
+				rotationBar5 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
 			}
-			else if (k == 2)
+			
+			for (int x = 0; x < 2; x++)
 			{
-				sizeValue = 4 + spectrumAverage * 10.0f;
-				distValue = 17.5f + spectrumAverage * 10.0f;
-				rotateValue = spectrumAverage * 15.0f;
-
-				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
-			}
-			else if (k == 3)
-			{
-				sizeValue = 3 + spectrumAverage * 10.0f;
-				distValue = 22.5f + spectrumAverage * 10.0f;
-				rotateValue = spectrumAverage * 10.0f;
-
-				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
-			}
-			else if (k == 4)
-			{
-				sizeValue = 2 + spectrumAverage * 10.0f;
-				distValue = 26.5f + spectrumAverage * 10.0f;
-				rotateValue = spectrumAverage * 5.0f;
-
-				rotationBar4 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, -1.0f, 0.0f));
-			}
-
-			// Make the bar visualizer into a square //
-
-			for (int j = 0; j < 8; j++)
-			{
-				Matrix rotationBar3;
-				Matrix translationBar2;
-
-				if (j == 0)
+				for (int j = 0; j < musicBarAmount1; j++)
 				{
-					translationBar2 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, -distValue));
-					rotationBar3 = Matrix::makeRotateMatrix(0.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
-				}
-				else if (j == 1)
-				{
-					translationBar2 = Matrix::makeTranslationMatrix(Vector(distValue, 0.0f, -distValue));
-					rotationBar3 = Matrix::makeRotateMatrix(45.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
-				}
-				else if (j == 2)
-				{
-					translationBar2 = Matrix::makeTranslationMatrix(Vector(distValue, 0.0f, 0.0f));
-					rotationBar3 = Matrix::makeRotateMatrix(90.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
-				}
-				else if (j == 3)
-				{
-					translationBar2 = Matrix::makeTranslationMatrix(Vector(distValue, 0.0f, distValue));
-					rotationBar3 = Matrix::makeRotateMatrix(135.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
-				}
-				else if (j == 4)
-				{
-					translationBar2 = Matrix::makeTranslationMatrix(Vector(0.0, 0.0f, distValue));
-					rotationBar3 = Matrix::makeRotateMatrix(180.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
-				}
-				else if (j == 5)
-				{
-					translationBar2 = Matrix::makeTranslationMatrix(Vector(-distValue, 0.0f, distValue));
-					rotationBar3 = Matrix::makeRotateMatrix(225.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
-				}
-				else if (j == 6)
-				{
-					translationBar2 = Matrix::makeTranslationMatrix(Vector(-distValue, 0.0f, 0.0f));
-					rotationBar3 = Matrix::makeRotateMatrix(270.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
-				}
-				else if (j == 7)
-				{
-					translationBar2 = Matrix::makeTranslationMatrix(Vector(-distValue, 0.0f, -distValue));
-					rotationBar3 = Matrix::makeRotateMatrix(315.0f + rotateValue, Vector(0.0f, 1.0f, 0.0f));
-				}
-
-				// Make the bar visualizer symmetrical //
-
-				for (int i = 0; i < 2; i++) {
+					Matrix rotationBar3;
 					Matrix translationBar1;
-					Matrix rotationBar1;
-					Matrix rotationBar2;
 
-					rotationBar2 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
-
-					if (i == 0)
+					if (x == 0)
 					{
-						translationBar1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
-						rotationBar1 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 1.0f, 0.0f));
+						rotationBar3 = Matrix::makeRotateMatrix((j * offsetAngle1), Vector(0.0f, 1.0f, 0.0f));
+						translationBar1 = Matrix::makeTranslationMatrix(Vector(0.0f, distValue1, 0.0f));
 					}
-					else if (i == 1)
+					if (x == 1)
 					{
-						translationBar1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
-						rotationBar1 = Matrix::makeRotateMatrix(180.0f, Vector(0.0f, 1.0f, 0.0f));
+						rotationBar3 = Matrix::makeRotateMatrix((j * offsetAngle1) + 45.0f, Vector(0.0f, 1.0f, 0.0f));
+						translationBar1 = Matrix::makeTranslationMatrix(Vector(0.0f, distValue1 + 3.25f, 0.0f));
 					}
 
-					theTotalBarMatrix = rotationBar4 * translationBar2 * rotationBar3 * rotationBar2 * translationBar1 * rotationBar1;
+					for (int i = 0; i < 2; i++)
+					{
+						Matrix rotationBar1;
+						Matrix rotationBar2;
 
-					Matrix barMatrix1 = viewMatrix * theTotalBarMatrix;
-					glLoadMatrixf((GLfloat*)barMatrix1.mVal);
-					drawMusicBar(0.5f, 8.0f, sizeValue);
-				}
-				for (int i = 0; i < 2; i++)
-				{
-					Matrix rotationSphere2;
+						rotationBar2 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
 
-					rotationSphere2 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 1.0f));
+						if (i == 0)
+						{
+							rotationBar1 = Matrix::makeRotateMatrix(0.0f, Vector(0.0f, 1.0f, 0.0f));
+						}
+						else if (i == 1)
+						{
+							rotationBar1 = Matrix::makeRotateMatrix(180.0f, Vector(0.0f, 1.0f, 0.0f));
+						}
 
-					theTotalBarMatrix = rotationSphere2 * theTotalBarMatrix;
+						theTotalBarMatrix = rotationBar5 * rotationBar4 * rotationBar3 * rotationBar2 * translationBar1 * rotationBar1;
 
-					Matrix sphereMatrix2 = viewMatrix * theTotalBarMatrix;
-					glLoadMatrixf((GLfloat*)sphereMatrix2.mVal);
-					drawMusicSphereRegular(0.0f, 360.0f, 360.0f, 180.0f, 0.05f, 10.0f, 10.0f, 1.0f, 1.0f, 1.0f);
+						Matrix barMatrix1 = viewMatrix * theTotalBarMatrix;
+						glLoadMatrixf((GLfloat*)barMatrix1.mVal);
+						drawMusicBar(0.5f, 10.0f, sizeValue1);
+					}
 				}
 			}
 		}
-	
+
+		// Code to draw music cylinder //
+		
+		float radius2 = 5.0f + spectrumAverage * 10.0f;
+		float offsetAngle2 = 45.0f;
+		int musicCylinderAmount1 = 8;
+			
+		for (int i = 0; i < musicCylinderAmount1; i++)
+		{
+			//Method 1 - Translate + Rotation
+			Matrix translationCylinder = Matrix::makeTranslationMatrix(Vector(radius2, 0.0f, 0.0f));
+			Matrix rotationCylinder = Matrix::makeRotateMatrix(cylinderBaseAngle - (i * offsetAngle2), Vector(0.0f, 1.0f, 0.0f));
+			Matrix cubeMatrix = viewMatrix * rotationCylinder * translationCylinder;
+				
+			glLoadMatrixf((GLfloat*)cubeMatrix.mVal);
+			
+			drawMusicCylinder(2.0f + spectrumAverage * 10.0f, 1.0f, 10);
+		}
+
+		cylinderBaseAngle += spectrumAverage * 10.0f;
+
 		// Draw Functions //
 		
 		//drawVertexCube(1, 3.0f);
