@@ -994,7 +994,7 @@ public:
 				Vertex p2 = SphereFunction(un, v, radius + (spectrumAverage * amplify));
 				Vertex p3 = SphereFunction(un, vn, radius + (spectrumAverage * amplify));
 
-				glColor4f(1.0f, 1.0f, 1.0f, spectrumAverage * 10.0f);
+				glColor4f(1.0f, 1.0f, 1.0f, spectrumAverage * 100.0f);
 				glVertex3f(p0.x*xFactor, p0.y*yFactor, p0.z);
 				glVertex3f(p2.x*xFactor, p2.y*yFactor, p2.z);
 				glVertex3f(p1.x*xFactor, p1.y*yFactor, p1.z);
@@ -1012,7 +1012,7 @@ public:
 		float offsetX = 0.0f;
 		float offsetY = 0.0f;
 		float offsetZ = 0.0f;
-		float halfHeight = height / 2.0f;
+		float halfHeight = height / 2.0f + spectrumAverage * 10.0f;
 
 		float redSpectrum = spectrumAverage;
 		float greenSpectrum = 1.0f - spectrumAverage;
@@ -1030,52 +1030,60 @@ public:
 			float x2 = radius * cos(((i + 1) * t) * PI / 180.0);
 			float z2 = radius * sin(((i + 1) * t) * PI / 180.0);
 
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
 			// ---- Upper Circle ----
 			//glColor3f(1.0f, (i % 2 == 0 ? 0.5f : 1.0f), 0.5f);
 			//Center of the circle
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(offsetX, offsetY + halfHeight, offsetZ);
 
 			//First point
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(x1, offsetY + halfHeight, z1);
 
 			//Second point
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(x2, offsetY + halfHeight, z2);
 
-			glColor4f(greenSpectrum, redSpectrum, 0.0f, 1.0f);
 			// ---- Lower Circle ----
 			//glColor3f(1.0f, (i % 2 == 0 ? 0.5f : 1.0f), 0.5f);
 			//Center of the circle
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(offsetX, offsetY - halfHeight, offsetZ);
 
 			//First point
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(x1, offsetY - halfHeight, z1);
 
 			//Second point
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(x2, offsetY - halfHeight, z2);
 
-			glColor4f(greenSpectrum, redSpectrum, 0.0f, 1.0f);
 			// ---- Upper Triangle ----
 			//glColor3f(0.5f, 1.0f, 0.5f);
 			//First point
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(x1, offsetY + halfHeight, z1);
 
 			//Second point
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(x2, offsetY + halfHeight, z2);
 
 			//Third point
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(x1, offsetY - halfHeight, z1);
 
-			glColor4f(redSpectrum, greenSpectrum, 0.0f, 1.0f);
 			// ---- Lower Triangle ----
 			//glColor3f(0.5f, 0.5f, 1.0f);
 			//First point
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(x1, offsetY - halfHeight, z1);
 
 			//Second point
+			glColor4f(greenSpectrum, redSpectrum, 1.0f, 1.0f);
 			glVertex3f(x2, offsetY - halfHeight, z2);
 
 			//Third point
+			glColor4f(redSpectrum, greenSpectrum, 1.0f, 1.0f);
 			glVertex3f(x2, offsetY + halfHeight, z2);
 		}
 		// Finished Drawing The Triangles
@@ -1105,7 +1113,7 @@ public:
 	float rotateValue1 = 0.0f;
 	float sizeValue1 = 0.0f;
 
-	float cylinderBaseAngle = 0.0f;
+	float cylinderBaseAngle1 = 0.0f;
 
 	void draw(const Matrix& viewMatrix)
 	{
@@ -1127,9 +1135,7 @@ public:
 		Matrix theTotalBarMatrix;
 		Matrix theTotalSphereMatrix;
 
-		activeRotateValue1 += spectrumAverage * 10.0f;
-
-		// The Central Sphere
+		// The Central Sphere of the music visualizer //
 
 		Matrix translationSphere1;
 		Matrix rotationSphere1;
@@ -1298,6 +1304,8 @@ public:
 		
 		// New code to draw music bar //
 
+		activeRotateValue1 += 0.15f + spectrumAverage * 10.0f;
+
 		float offsetAngle1 = 90.0f;
 		int musicBarAmount1 = 4;
 		int musicBarLayer1 = 6;
@@ -1374,29 +1382,79 @@ public:
 						glLoadMatrixf((GLfloat*)barMatrix1.mVal);
 						drawMusicBar(0.5f, 10.0f, sizeValue1);
 					}
+					for (int i = 0; i < 2; i++)
+					{
+						Matrix rotationSphere2;
+						
+						rotationSphere2 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 1.0f));
+						
+						theTotalBarMatrix = rotationSphere2 * theTotalBarMatrix;
+						
+						Matrix sphereMatrix2 = viewMatrix * theTotalBarMatrix;
+						glLoadMatrixf((GLfloat*)sphereMatrix2.mVal);
+						drawMusicSphereRegular(0.0f, 360.0f, 360.0f, 180.0f, 0.05f, 10.0f, 10.0f, 1.0f, 1.0f, 1.0f);
+					}
 				}
 			}
 		}
 
 		// Code to draw music cylinder //
-		
-		float radius2 = 5.0f + spectrumAverage * 10.0f;
-		float offsetAngle2 = 45.0f;
-		int musicCylinderAmount1 = 8;
-			
-		for (int i = 0; i < musicCylinderAmount1; i++)
-		{
-			//Method 1 - Translate + Rotation
-			Matrix translationCylinder = Matrix::makeTranslationMatrix(Vector(radius2, 0.0f, 0.0f));
-			Matrix rotationCylinder = Matrix::makeRotateMatrix(cylinderBaseAngle - (i * offsetAngle2), Vector(0.0f, 1.0f, 0.0f));
-			Matrix cubeMatrix = viewMatrix * rotationCylinder * translationCylinder;
-				
-			glLoadMatrixf((GLfloat*)cubeMatrix.mVal);
-			
-			drawMusicCylinder(2.0f + spectrumAverage * 10.0f, 1.0f, 10);
-		}
 
-		cylinderBaseAngle += spectrumAverage * 10.0f;
+		cylinderBaseAngle1 += 1.0f + spectrumAverage * 100.0f;
+		
+		float radius2 = 3.5f + spectrumAverage * 8.0f;
+		float offsetAngle2 = 45.0f;
+		int musicCylinderAmount1 = 20;
+
+		float radius3 = 1.0f + spectrumAverage * 8.0f;
+		float offsetAngle3 = 45.0f;
+		int musicCylinderAmount2 = 10;
+
+		offsetAngle2 = 360.0f / musicCylinderAmount1;
+		offsetAngle3 = 360.0f / musicCylinderAmount2;
+			
+		// A circular of cylinders in a circular of cylinders, cylinderception! //
+
+		Matrix theCylinderMatrix1;
+
+		for (int j = 0; j < musicCylinderAmount2; j++)
+		{
+			Matrix cylinderMatrix2;
+			
+			Matrix translationCylinder2;
+			Matrix rotationCylinder2;
+			Matrix makeCylinderSpin2;
+			Matrix rotateSideCylinder2;
+
+			rotateSideCylinder2 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
+			translationCylinder2 = Matrix::makeTranslationMatrix(Vector(radius3, 0.0f, 0.0f));
+			rotationCylinder2 = Matrix::makeRotateMatrix((j * offsetAngle3), Vector(0.0f, 1.0f, 0.0f));
+			makeCylinderSpin2 = Matrix::makeRotateMatrix(cylinderBaseAngle1, Vector(0.0f, 1.0f, 0.0f));
+
+			cylinderMatrix2 = makeCylinderSpin2 * rotationCylinder2 * translationCylinder2 * rotateSideCylinder2;
+
+			for (int i = 0; i < musicCylinderAmount1; i++)
+			{
+				//Method 1 - Translate + Rotation
+				Matrix cylinderMatrix1;
+
+				Matrix translationCylinder1;
+				Matrix rotationCylinder1;
+				Matrix makeCylinderSpin1;
+				Matrix rotateSideCylinder1;
+
+				rotateSideCylinder1 = Matrix::makeRotateMatrix(90.0f, Vector(1.0f, 0.0f, 0.0f));
+				translationCylinder1 = Matrix::makeTranslationMatrix(Vector(radius2, 0.0f, 0.0f));
+				rotationCylinder1 = Matrix::makeRotateMatrix((i * offsetAngle2), Vector(0.0f, 1.0f, 0.0f));
+				makeCylinderSpin1 = Matrix::makeRotateMatrix(cylinderBaseAngle1, Vector(0.0f, 1.0f, 0.0f));
+
+				cylinderMatrix1 = makeCylinderSpin1 * rotationCylinder1 * translationCylinder1 * rotateSideCylinder1;
+
+				theCylinderMatrix1 = viewMatrix * cylinderMatrix2 * cylinderMatrix1;
+				glLoadMatrixf((GLfloat*)theCylinderMatrix1.mVal);
+				drawMusicCylinder(0.25f, 0.25f, 30);
+			}
+		}
 
 		// Draw Functions //
 		
