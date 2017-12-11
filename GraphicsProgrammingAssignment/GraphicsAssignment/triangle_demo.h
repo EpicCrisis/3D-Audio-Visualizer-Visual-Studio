@@ -1090,6 +1090,38 @@ public:
 		glEnd();
 	}
 
+	// Function for lightning effects. //
+
+	void drawLightning(float x1, float y1, float z1, float x2, float y2, float z2, float displacement, float curDetail, GLfloat lineWidth)
+	{
+		glLineWidth(lineWidth);
+		glBegin(GL_LINES);
+
+		float redSpectrum = spectrumAverage;
+		float blueSpectrum = 1.0f - spectrumAverage;
+
+		if (displacement < curDetail) 
+		{
+			glColor4f(0.580f + redSpectrum, 0.000f, 0.827f + blueSpectrum, 0.5f + spectrumAverage * 10.0f);
+			glVertex3f(x1, y1, z1);
+			glVertex3f(x2, y2, z2);
+		}
+		else 
+		{
+			float mid_x = (x2 + x1) / 2;
+			float mid_y = (y2 + y1) / 2;
+			float mid_z = (z2 + z1) / 2;
+
+			mid_x += (rand() % 2 - 0.5f) * displacement;
+			mid_y += (rand() % 2 - 0.5f) * displacement;
+			mid_z += (rand() % 2 - 0.5f) * displacement;
+
+			drawLightning(x1, y1, z1, mid_x, mid_y, mid_z, displacement / 2, curDetail, lineWidth);
+			drawLightning(x2, y2, z2, mid_x, mid_y, mid_z, displacement / 2, curDetail, lineWidth);
+		}
+		glEnd();
+	}
+
 	void updateFmod()
 	{
 		m_fmodSystem->update();
@@ -1114,6 +1146,8 @@ public:
 	float sizeValue1 = 0.0f;
 
 	float cylinderBaseAngle1 = 0.0f;
+
+	float lightningBaseAngle1 = 0.0f;
 
 	void draw(const Matrix& viewMatrix)
 	{
@@ -1400,11 +1434,11 @@ public:
 
 		// Code to draw music cylinder //
 
-		cylinderBaseAngle1 += 1.0f + spectrumAverage * 100.0f;
+		cylinderBaseAngle1 += 1.0f + spectrumAverage * 10.0f;
 		
 		float radius2 = 3.5f + spectrumAverage * 8.0f;
 		float offsetAngle2 = 45.0f;
-		int musicCylinderAmount1 = 20;
+		int musicCylinderAmount1 = 24;
 
 		float radius3 = 1.0f + spectrumAverage * 8.0f;
 		float offsetAngle3 = 45.0f;
@@ -1452,8 +1486,39 @@ public:
 
 				theCylinderMatrix1 = viewMatrix * cylinderMatrix2 * cylinderMatrix1;
 				glLoadMatrixf((GLfloat*)theCylinderMatrix1.mVal);
-				drawMusicCylinder(0.25f, 0.25f, 30);
+				drawMusicCylinder(0.25f, 0.15f, 30);
 			}
+		}
+
+		// Code to make the electric bois. //
+		
+		lightningBaseAngle1 += 0.15f + spectrumAverage * 10.0f;
+
+		float lightningRadius1 = 0.0f;
+		float lightningOffsetAngle1 = 45.0f;
+		int lightningAmount1 = 10;
+
+		lightningOffsetAngle1 = 360.0f / lightningAmount1;
+
+		for (int z = 0; z < lightningAmount1; z++)
+		{
+			Matrix theLightningMatrix1;
+
+			Matrix translationLightning1;
+			Matrix rotationLightning1;
+			Matrix makeLightningSpin1;
+
+			Matrix lightningMatrix1;
+
+			translationLightning1 = Matrix::makeTranslationMatrix(Vector(lightningRadius1, 0.0f, 0.0f));
+			rotationLightning1 = Matrix::makeRotateMatrix((z * lightningOffsetAngle1), Vector(0.0f, 1.0f, 0.0f));
+			makeLightningSpin1 = Matrix::makeRotateMatrix(lightningBaseAngle1, Vector(0.0f, 1.0f, 0.0f));
+
+			lightningMatrix1 = makeLightningSpin1 * translationLightning1 * rotationLightning1;
+
+			theLightningMatrix1 = viewMatrix * lightningMatrix1;
+			glLoadMatrixf((GLfloat*)theLightningMatrix1.mVal);
+			drawLightning(0.0f, 0.0f, 0.0f, 7.0f + spectrumAverage * 8.0f, 0.0f, 0.0f, 1.5f + spectrumAverage, 0.025f, 2.5f + spectrumAverage * 10.0f);
 		}
 
 		// Draw Functions //
