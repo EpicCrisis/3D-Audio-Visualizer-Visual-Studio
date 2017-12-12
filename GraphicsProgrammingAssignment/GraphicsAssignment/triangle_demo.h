@@ -1006,13 +1006,13 @@ public:
 		glEnd();
 	}
 
-	void drawMusicCylinder(float height, float radius, int iteration = 10) //Change iteration to steps
+	void drawMusicCylinder(float height, float radius, int iteration = 10, float amplify = 8.0f) //Change iteration to steps
 	{
 		//Offset
 		float offsetX = 0.0f;
 		float offsetY = 0.0f;
 		float offsetZ = 0.0f;
-		float halfHeight = height / 2.0f + spectrumAverage * 10.0f;
+		float halfHeight = height / 2.0f + spectrumAverage * amplify;
 
 		float redSpectrum = spectrumAverage;
 		float greenSpectrum = 1.0f - spectrumAverage;
@@ -1137,6 +1137,8 @@ public:
 
 	Plane plane = Plane(0.05f, 0.2f, 3.0f, 10.0f, 10);
 
+	float sphereRotateValue1 = 0.0f;
+
 	float activeRotateValue1 = 0.0f;
 	float activeRotateValue2 = 0.0f;
 	float moveValue = 0.0f;
@@ -1171,11 +1173,13 @@ public:
 
 		// The Central Sphere of the music visualizer //
 
+		sphereRotateValue1 += 2.5f + spectrumAverage * 10.0f;
+
 		Matrix translationSphere1;
 		Matrix rotationSphere1;
 
 		translationSphere1 = Matrix::makeTranslationMatrix(Vector(0.0f, 0.0f, 0.0f));
-		rotationSphere1 = Matrix::makeRotateMatrix(activeRotateValue1, Vector(0.0f, 1.0f, 0.0f));
+		rotationSphere1 = Matrix::makeRotateMatrix(sphereRotateValue1, Vector(0.0f, 1.0f, 0.0f));
 
 		theTotalSphereMatrix = rotationSphere1 * translationSphere1;
 
@@ -1486,7 +1490,7 @@ public:
 
 				theCylinderMatrix1 = viewMatrix * cylinderMatrix2 * cylinderMatrix1;
 				glLoadMatrixf((GLfloat*)theCylinderMatrix1.mVal);
-				drawMusicCylinder(0.25f, 0.15f, 30);
+				drawMusicCylinder(0.25f, 0.15f, 30, 8.0f);
 			}
 		}
 
@@ -1496,7 +1500,7 @@ public:
 
 		float lightningRadius1 = 0.0f;
 		float lightningOffsetAngle1 = 45.0f;
-		int lightningAmount1 = 10;
+		int lightningAmount1 = 10 + spectrumAverage * 100.0f;
 
 		lightningOffsetAngle1 = 360.0f / lightningAmount1;
 
@@ -1518,7 +1522,7 @@ public:
 
 			theLightningMatrix1 = viewMatrix * lightningMatrix1;
 			glLoadMatrixf((GLfloat*)theLightningMatrix1.mVal);
-			drawLightning(0.0f, 0.0f, 0.0f, 7.0f + spectrumAverage * 8.0f, 0.0f, 0.0f, 1.5f + spectrumAverage, 0.025f, 2.5f + spectrumAverage * 10.0f);
+			drawLightning(0.0f, 0.0f, 0.0f, 7.25f + spectrumAverage * 8.0f, 0.0f, 0.0f, 1.5f + spectrumAverage, 0.025f, 2.5f + spectrumAverage);
 		}
 
 		// Draw Functions //
